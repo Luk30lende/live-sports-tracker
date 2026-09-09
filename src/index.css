@@ -486,3 +486,197 @@ nav a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* Standings Page */
+
+.standings-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 30px;
+}
+
+.standings-header {
+  margin-bottom: 35px;
+}
+
+.standings-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.standings-header > div > p:last-child {
+  color: #6b7280;
+}
+
+.league-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.league-selector button {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.league-selector button:hover {
+  background: #f3f4f6;
+}
+
+.league-selector button.active {
+  background: #111827;
+  color: white;
+  border-color: #111827;
+}
+
+.standings-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.standings-section-header h2 {
+  font-size: 26px;
+  margin-bottom: 5px;
+}
+
+.standings-section-header p {
+  color: #6b7280;
+}
+
+.standings-section-header > span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.standings-table-wrapper {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow-x: auto;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.standings-table th {
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.standings-table th:nth-child(2) {
+  text-align: left;
+}
+
+.standings-table td {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+}
+
+.standings-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.standings-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.position {
+  color: #6b7280;
+  font-weight: 600;
+  width: 50px;
+}
+
+.standing-team {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left !important;
+  font-weight: 600;
+  min-width: 200px;
+}
+
+.standing-team-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #374151;
+}
+
+.points {
+  font-weight: bold;
+  color: #111827;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.form span {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.form-w {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.form-d {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.form-l {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 768px) {
+  .standings-page {
+    padding: 30px 20px;
+  }
+
+  .standings-header h1 {
+    font-size: 36px;
+  }
+
+  .standings-section-header {
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
