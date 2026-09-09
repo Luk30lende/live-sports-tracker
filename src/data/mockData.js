@@ -66,3 +66,76 @@ export const games = [
     time: "FT",
   },
 ];
+
+export const teams = [
+  {
+    id: 1,
+    name: "Arsenal",
+    shortName: "ARS",
+    sport: "Football",
+    league: "Premier League",
+  },
+  {
+    id: 2,
+    name: "Chelsea",
+    shortName: "CHE",
+    sport: "Football",
+    league: "Premier League",
+  },
+  {
+    id: 3,
+    name: "Liverpool",
+    shortName: "LIV",
+    sport: "Football",
+    league: "Premier League",
+  },
+  {
+    id: 4,
+    name: "Manchester United",
+    shortName: "MUN",
+    sport: "Football",
+    league: "Premier League",
+  },
+  {
+    id: 5,
+    name: "Barcelona",
+    shortName: "BAR",
+    sport: "Football",
+    league: "La Liga",
+  },
+  {
+    id: 6,
+    name: "Real Madrid",
+    shortName: "RMA",
+    sport: "Football",
+    league: "La Liga",
+  },
+  {
+    id: 7,
+    name: "Lakers",
+    shortName: "LAL",
+    sport: "Basketball",
+    league: "NBA",
+  },
+  {
+    id: 8,
+    name: "Warriors",
+    shortName: "GSW",
+    sport: "Basketball",
+    league: "NBA",
+  },
+  {
+    id: 9,
+    name: "Celtics",
+    shortName: "BOS",
+    sport: "Basketball",
+    league: "NBA",
+  },
+  {
+    id: 10,
+    name: "Bucks",
+    shortName: "MIL",
+    sport: "Basketball",
+    league: "NBA",
+  },
+];
