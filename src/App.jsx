@@ -6,6 +6,7 @@ import Scores from "./pages/Scores";
 import Teams from "./pages/Teams";
 import Standings from "./pages/Standings";
 import Players from "./pages/Players";
+import ApiTest from "./pages/ApiTest";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/teams" element={<Teams />} />
         <Route path="/standings" element={<Standings />} />
         <Route path="/players" element={<Players />} />
+        <Route path="/api-test" element={<ApiTest />} />
       </Routes>
     </BrowserRouter>
   );

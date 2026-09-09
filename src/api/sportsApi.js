@@ -1,0 +1,35 @@
+const BASE_URL = "https://www.thesportsdb.com/api/v1/json/123";
+
+function request(endpoint) {
+  return fetch(`${BASE_URL}/${endpoint}`).then((response) => {
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    return response.json();
+  });
+}
+
+export function searchTeam(teamName) {
+  return request(`searchteams.php?t=${encodeURIComponent(teamName)}`);
+}
+
+export function getLeagueNextEvents(leagueId) {
+  return request(`eventsnextleague.php?id=${leagueId}`);
+}
+
+export function getLeaguePreviousEvents(leagueId) {
+  return request(`eventspastleague.php?id=${leagueId}`);
+}
+
+export function getTeamPlayers(teamId) {
+  return request(`lookup_all_players.php?id=${teamId}`);
+}
+
+export function getLeagueStandings(leagueId) {
+  return request(`lookuptable.php?l=${leagueId}`);
+}
+
+export function getLeagueTeams(leagueName) {
+  return request(`search_all_teams.php?l=${encodeURIComponent(leagueName)}`);
+}
