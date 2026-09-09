@@ -12,6 +12,7 @@ function Navbar() {
         <Link to="/scores">Scores</Link>
         <Link to="/teams">Teams</Link>
         <Link to="/standings">Standings</Link>
+        <Link to="/players">Players</Link>
       </div>
     </nav>
   );
