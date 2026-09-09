@@ -38,6 +38,194 @@ nav a:hover {
   color: #111827;
 }
 
-main {
-  padding: 40px;
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 30px;
+}
+
+.welcome {
+  background: #111827;
+  color: white;
+  border-radius: 20px;
+  padding: 50px;
+  margin-bottom: 50px;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.welcome h1 {
+  font-size: 48px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.welcome-text {
+  max-width: 500px;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+.sports-section {
+  margin-bottom: 50px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.section-heading p {
+  color: #6b7280;
+}
+
+.live-count {
+  font-size: 12px;
+  font-weight: bold;
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.game-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  transition: transform 0.2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-3px);
+}
+
+.game-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 25px;
+}
+
+.live-badge {
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 5px 9px;
+  border-radius: 12px;
+}
+
+.teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.team-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+}
+
+.score span {
+  color: #9ca3af;
+}
+
+.game-time {
+  text-align: center;
+  margin-top: 20px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  nav {
+    padding: 15px 20px;
+  }
+
+  nav div {
+    gap: 10px;
+  }
+
+  .dashboard {
+    padding: 30px 20px;
+  }
+
+  .welcome {
+    padding: 30px;
+  }
+
+  .welcome h1 {
+    font-size: 36px;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.logo {
+  text-decoration: none;
+  color: #111827;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 30px;
+}
+
+.page-container h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.page-container p {
+  color: #6b7280;
 }

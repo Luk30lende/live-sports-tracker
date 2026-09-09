@@ -1,13 +1,17 @@
+import { Link } from "react-router-dom";
+
 function Navbar() {
   return (
     <nav>
-      <h2>Sports Tracker</h2>
+      <Link to="/" className="logo">
+        Sports Tracker
+      </Link>
 
       <div>
-        <a href="/">Home</a>
-        <a href="/scores">Scores</a>
-        <a href="/teams">Teams</a>
-        <a href="/standings">Standings</a>
+        <Link to="/">Home</Link>
+        <Link to="/scores">Scores</Link>
+        <Link to="/teams">Teams</Link>
+        <Link to="/standings">Standings</Link>
       </div>
     </nav>
   );
