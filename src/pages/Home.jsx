@@ -1,7 +1,11 @@
 import GameCard from "../components/GameCard";
-import { liveGames, upcomingGames } from "../data/mockData";
+import { games } from "../data/mockData";
 
 function Home() {
+  const liveGames = games.filter((game) => game.status === "LIVE");
+
+  const upcomingGames = games.filter((game) => game.status === "UPCOMING");
+
   return (
     <main className="dashboard">
       <section className="welcome">

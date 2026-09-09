@@ -229,3 +229,70 @@ nav a:hover {
 .page-container p {
   color: #6b7280;
 }
+
+.scores-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 30px;
+}
+
+.scores-header {
+  margin-bottom: 35px;
+}
+
+.scores-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.scores-header > div > p:last-child {
+  color: #6b7280;
+}
+
+.score-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.score-filters button {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.score-filters button:hover {
+  background: #f3f4f6;
+}
+
+.score-filters button.active {
+  background: #111827;
+  color: white;
+  border-color: #111827;
+}
+
+.scores-list {
+  margin-top: 20px;
+}
+
+.scores-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.scores-list-header h2 {
+  font-size: 24px;
+}
+
+.scores-list-header span {
+  color: #6b7280;
+  font-size: 14px;
+}

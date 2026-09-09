@@ -15,9 +15,15 @@ function GameCard({ game }) {
         </div>
 
         <div className="score">
-          <strong>{game.homeScore}</strong>
-          <span>-</span>
-          <strong>{game.awayScore}</strong>
+          {game.status === "UPCOMING" ? (
+            <strong>{game.time}</strong>
+          ) : (
+            <>
+              <strong>{game.homeScore}</strong>
+              <span>-</span>
+              <strong>{game.awayScore}</strong>
+            </>
+          )}
         </div>
 
         <div className="team">
@@ -28,7 +34,11 @@ function GameCard({ game }) {
       </div>
 
       <div className="game-time">
-        {game.status === "LIVE" ? `${game.minute}'` : game.time}
+        {game.status === "LIVE"
+          ? `${game.minute}'`
+          : game.status === "FINISHED"
+            ? "Full Time"
+            : "Upcoming"}
       </div>
     </div>
   );

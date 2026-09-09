@@ -1,4 +1,4 @@
-export const liveGames = [
+export const games = [
   {
     id: 1,
     league: "Premier League",
@@ -21,9 +21,6 @@ export const liveGames = [
     minute: 42,
     time: null,
   },
-];
-
-export const upcomingGames = [
   {
     id: 3,
     league: "Premier League",
@@ -45,5 +42,27 @@ export const upcomingGames = [
     status: "UPCOMING",
     minute: null,
     time: "19:30",
+  },
+  {
+    id: 5,
+    league: "La Liga",
+    homeTeam: "Barcelona",
+    awayTeam: "Real Madrid",
+    homeScore: 3,
+    awayScore: 2,
+    status: "FINISHED",
+    minute: null,
+    time: "FT",
+  },
+  {
+    id: 6,
+    league: "Serie A",
+    homeTeam: "Inter Milan",
+    awayTeam: "AC Milan",
+    homeScore: 1,
+    awayScore: 0,
+    status: "FINISHED",
+    minute: null,
+    time: "FT",
   },
 ];
