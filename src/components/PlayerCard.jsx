@@ -1,6 +1,11 @@
-function PlayerCard({ player }) {
+function PlayerCard({ player, onSelect }) {
   return (
-    <div className="player-card">
+    <div
+      className="player-card"
+      role="button"
+      tabIndex="0"
+      onClick={() => onSelect(player)}
+    >
       <div className="player-card-header">
         <div className="player-avatar">
           {player.image ? (

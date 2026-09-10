@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react";
 import PlayerCard from "../components/PlayerCard";
-import { getLeagueTeams, getTeamPlayers } from "../api/sportsApi";
-import { normalizeTeam, normalizePlayer } from "../api/normalizers";
+import PlayerDetails from "../components/PlayerDetails";
+
+import {
+  getLeagueTeams,
+  getTeamPlayers,
+  getPlayerStats,
+} from "../api/sportsApi";
+
+import {
+  normalizeTeam,
+  normalizePlayer,
+  normalizePlayerStats,
+} from "../api/normalizers";
 
 function Players() {
   const [teams, setTeams] = useState([]);
@@ -11,7 +22,35 @@ function Players() {
   const [loadingTeams, setLoadingTeams] = useState(true);
   const [loadingPlayers, setLoadingPlayers] = useState(false);
 
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+
+  const [playerStats, setPlayerStats] = useState([]);
+
+  const [loadingStats, setLoadingStats] = useState(false);
+
+  const [statsError, setStatsError] = useState("");
+
   const [error, setError] = useState("");
+
+  const handlePlayerSelect = (player) => {
+    setSelectedPlayer(player);
+    setPlayerStats([]);
+    setStatsError("");
+    setLoadingStats(true);
+
+    getPlayerStats(player.id)
+      .then((data) => {
+        const apiStats = (data.playerstats || []).map(normalizePlayerStats);
+
+        setPlayerStats(apiStats);
+      })
+      .catch((error) => {
+        setStatsError(error.message);
+      })
+      .finally(() => {
+        setLoadingStats(false);
+      });
+  };
 
   useEffect(() => {
     setLoadingTeams(true);
@@ -106,24 +145,40 @@ function Players() {
         <div className="status-message">Loading players...</div>
       )}
 
-      {!loadingPlayers && !error && selectedTeam && players.length > 0 && (
-        <section className="players-list">
-          <div className="players-list-header">
-            <div>
-              <h2>{selectedTeam.name}</h2>
+      {selectedPlayer ? (
+        <PlayerDetails
+          player={selectedPlayer}
+          stats={playerStats}
+          loading={loadingStats}
+          error={statsError}
+          onClose={() => setSelectedPlayer(null)}
+        />
+      ) : (
+        <>
+          {!loadingPlayers && !error && selectedTeam && players.length > 0 && (
+            <section className="players-list">
+              <div className="players-list-header">
+                <div>
+                  <h2>{selectedTeam.name}</h2>
 
-              <p>Current squad information</p>
-            </div>
+                  <p>Current squad information</p>
+                </div>
 
-            <span>{players.length} players</span>
-          </div>
+                <span>{players.length} players</span>
+              </div>
 
-          <div className="players-grid">
-            {players.map((player) => (
-              <PlayerCard key={player.id} player={player} />
-            ))}
-          </div>
-        </section>
+              <div className="players-grid">
+                {players.map((player) => (
+                  <PlayerCard
+                    key={player.id}
+                    player={player}
+                    onSelect={handlePlayerSelect}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
 
       {!loadingPlayers && !error && selectedTeam && players.length === 0 && (

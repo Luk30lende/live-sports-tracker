@@ -26,6 +26,10 @@ export function getTeamPlayers(teamId) {
   return request(`lookup_all_players.php?id=${teamId}`);
 }
 
+export function getPlayerStats(playerId) {
+  return request(`lookupplayerstats.php?id=${playerId}`);
+}
+
 export function getLeagueStandings(leagueId) {
   return request(`lookuptable.php?l=${leagueId}`);
 }

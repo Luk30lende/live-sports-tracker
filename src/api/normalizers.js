@@ -90,3 +90,26 @@ export function normalizePlayer(player) {
     image: player.strThumb || player.strCutout || null,
   };
 }
+
+export function normalizePlayerStats(stat) {
+  return {
+    id: stat.id,
+    playerId: stat.idPlayer,
+    teamId: stat.idTeam,
+    leagueId: stat.idLeague,
+
+    sport: stat.strSport === "Soccer" ? "Football" : stat.strSport,
+
+    player: stat.strPlayer,
+    team: stat.strTeam,
+    league: stat.strLeague,
+
+    statistic: stat.strStatistic,
+    value: stat.strValue,
+
+    season: stat.strSeason,
+
+    teamBadge: stat.strTeamBadge || null,
+    leagueBadge: stat.strLeagueBadge || null,
+  };
+}
