@@ -63,3 +63,30 @@ export function normalizeStanding(team) {
     badge: team.strBadge || null,
   };
 }
+
+export function normalizePlayer(player) {
+  return {
+    id: player.idPlayer,
+    name: player.strPlayer,
+    shortName: player.strPlayer
+      ? player.strPlayer
+          .split(" ")
+          .map((name) => name.charAt(0))
+          .join("")
+          .slice(0, 2)
+          .toUpperCase()
+      : "??",
+
+    team: player.strTeam || "Unknown",
+    league: player.strLeague || "Unknown",
+
+    sport: player.strSport === "Soccer" ? "Football" : player.strSport,
+
+    position: player.strPosition || "Unknown",
+    number: player.strNumber || "-",
+
+    nationality: player.strNationality || "Unknown",
+
+    image: player.strThumb || player.strCutout || null,
+  };
+}

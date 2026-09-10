@@ -1,10 +1,14 @@
 function PlayerCard({ player }) {
-  const isBasketball = player.sport === "Basketball";
-
   return (
     <div className="player-card">
       <div className="player-card-header">
-        <div className="player-avatar">{player.shortName}</div>
+        <div className="player-avatar">
+          {player.image ? (
+            <img src={player.image} alt={player.name} />
+          ) : (
+            player.shortName
+          )}
+        </div>
 
         <span className="player-number">#{player.number}</span>
       </div>
@@ -16,24 +20,7 @@ function PlayerCard({ player }) {
 
         <div className="player-team">
           <strong>{player.team}</strong>
-          <span>{player.league}</span>
-        </div>
-      </div>
-
-      <div className="player-stats">
-        <div>
-          <strong>{player.appearances}</strong>
-          <span>Games</span>
-        </div>
-
-        <div>
-          <strong>{player.goals}</strong>
-          <span>{isBasketball ? "PPG" : "Goals"}</span>
-        </div>
-
-        <div>
-          <strong>{player.assists}</strong>
-          <span>Assists</span>
+          <span>{player.nationality}</span>
         </div>
       </div>
     </div>

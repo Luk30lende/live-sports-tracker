@@ -1,14 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlayerCard from "../components/PlayerCard";
-import { players } from "../data/mockData";
+import { getLeagueTeams, getTeamPlayers } from "../api/sportsApi";
+import { normalizeTeam, normalizePlayer } from "../api/normalizers";
 
 function Players() {
-  const [sportFilter, setSportFilter] = useState("ALL");
+  const [teams, setTeams] = useState([]);
+  const [selectedTeamId, setSelectedTeamId] = useState("");
+  const [players, setPlayers] = useState([]);
 
-  const filteredPlayers =
-    sportFilter === "ALL"
-      ? players
-      : players.filter((player) => player.sport === sportFilter);
+  const [loadingTeams, setLoadingTeams] = useState(true);
+  const [loadingPlayers, setLoadingPlayers] = useState(false);
+
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoadingTeams(true);
+    setError("");
+
+    getLeagueTeams("English Premier League")
+      .then((data) => {
+        const apiTeams = (data.teams || []).map(normalizeTeam);
+
+        setTeams(apiTeams);
+
+        const arsenal = apiTeams.find((team) => team.name === "Arsenal");
+
+        if (arsenal) {
+          setSelectedTeamId(arsenal.id);
+        }
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoadingTeams(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedTeamId) {
+      return;
+    }
+
+    setLoadingPlayers(true);
+    setError("");
+
+    getTeamPlayers(selectedTeamId)
+      .then((data) => {
+        const apiPlayers = (data.player || []).map(normalizePlayer);
+
+        setPlayers(apiPlayers);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setPlayers([]);
+      })
+      .finally(() => {
+        setLoadingPlayers(false);
+      });
+  }, [selectedTeamId]);
+
+  const selectedTeam = teams.find((team) => team.id === selectedTeamId);
 
   return (
     <main className="players-page">
@@ -18,54 +70,65 @@ function Players() {
 
           <h1>Players</h1>
 
-          <p>Explore players, teams and their latest statistics.</p>
+          <p>Explore players and squad information from the Premier League.</p>
         </div>
 
-        <div className="player-count">{filteredPlayers.length} Players</div>
+        {!loadingPlayers && !error && (
+          <div className="player-count">{players.length} Players</div>
+        )}
       </section>
 
-      <div className="player-filters">
-        <button
-          className={sportFilter === "ALL" ? "active" : ""}
-          onClick={() => setSportFilter("ALL")}
-        >
-          All
-        </button>
+      <section className="player-team-selector">
+        <label htmlFor="team">Select Team</label>
 
-        <button
-          className={sportFilter === "Football" ? "active" : ""}
-          onClick={() => setSportFilter("Football")}
-        >
-          Football
-        </button>
+        {loadingTeams ? (
+          <p>Loading teams...</p>
+        ) : (
+          <select
+            id="team"
+            value={selectedTeamId}
+            onChange={(event) => setSelectedTeamId(event.target.value)}
+          >
+            <option value="">Select a team</option>
 
-        <button
-          className={sportFilter === "Basketball" ? "active" : ""}
-          onClick={() => setSportFilter("Basketball")}
-        >
-          Basketball
-        </button>
-      </div>
+            {teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+        )}
+      </section>
 
-      <section className="players-list">
-        <div className="players-list-header">
-          <div>
-            <h2>
-              {sportFilter === "ALL" ? "All Players" : `${sportFilter} Players`}
-            </h2>
+      {error && <div className="status-message error">{error}</div>}
 
-            <p>Browse player statistics and team information.</p>
+      {loadingPlayers && (
+        <div className="status-message">Loading players...</div>
+      )}
+
+      {!loadingPlayers && !error && selectedTeam && players.length > 0 && (
+        <section className="players-list">
+          <div className="players-list-header">
+            <div>
+              <h2>{selectedTeam.name}</h2>
+
+              <p>Current squad information</p>
+            </div>
+
+            <span>{players.length} players</span>
           </div>
 
-          <span>{filteredPlayers.length} players</span>
-        </div>
+          <div className="players-grid">
+            {players.map((player) => (
+              <PlayerCard key={player.id} player={player} />
+            ))}
+          </div>
+        </section>
+      )}
 
-        <div className="players-grid">
-          {filteredPlayers.map((player) => (
-            <PlayerCard key={player.id} player={player} />
-          ))}
-        </div>
-      </section>
+      {!loadingPlayers && !error && selectedTeam && players.length === 0 && (
+        <div className="status-message">No players found for this team.</div>
+      )}
     </main>
   );
 }
