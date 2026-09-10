@@ -35,3 +35,17 @@ export function normalizeGame(event) {
     venue: event.strVenue || null,
   };
 }
+
+export function normalizeTeam(team) {
+  return {
+    id: team.idTeam,
+    name: team.strTeam,
+    shortName: team.strTeamShort || team.strTeam,
+    sport: team.strSport === "Soccer" ? "Football" : team.strSport,
+    league: team.strLeague,
+    country: team.strCountry,
+    badge: team.strBadge || null,
+    logo: team.strLogo || null,
+    stadium: team.strStadium || null,
+  };
+}

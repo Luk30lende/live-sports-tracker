@@ -1,10 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TeamCard from "../components/TeamCard";
-import { teams } from "../data/mockData";
+import { getLeagueTeams } from "../api/sportsApi";
+import { normalizeTeam } from "../api/normalizers";
 
 function Teams() {
   const [sportFilter, setSportFilter] = useState("ALL");
   const [favouriteTeams, setFavouriteTeams] = useState([]);
+
+  const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setError("");
+
+    getLeagueTeams("English Premier League")
+      .then((data) => {
+        const apiTeams = (data.teams || []).map(normalizeTeam);
+
+        setTeams(apiTeams);
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const filteredTeams =
     sportFilter === "ALL"
@@ -60,6 +83,10 @@ function Teams() {
         </button>
       </div>
 
+      {loading && <div className="status-message">Loading teams...</div>}
+
+      {error && <div className="status-message error">{error}</div>}
+
       <section className="teams-list">
         <div className="teams-list-header">
           <h2>Teams</h2>
@@ -67,16 +94,18 @@ function Teams() {
           <span>{filteredTeams.length} teams</span>
         </div>
 
-        <div className="teams-grid">
-          {filteredTeams.map((team) => (
-            <TeamCard
-              key={team.id}
-              team={team}
-              isFavourite={favouriteTeams.includes(team.id)}
-              onToggleFavourite={toggleFavourite}
-            />
-          ))}
-        </div>
+        {!loading && !error && (
+          <div className="teams-grid">
+            {filteredTeams.map((team) => (
+              <TeamCard
+                key={team.id}
+                team={team}
+                isFavourite={favouriteTeams.includes(team.id)}
+                onToggleFavourite={toggleFavourite}
+              />
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );

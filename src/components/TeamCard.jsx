@@ -2,7 +2,13 @@ function TeamCard({ team, isFavourite, onToggleFavourite }) {
   return (
     <div className="team-card">
       <div className="team-card-top">
-        <div className="team-logo-large">{team.shortName}</div>
+        <div className="team-logo-large">
+          {team.badge ? (
+            <img src={team.badge} alt={`${team.name} badge`} />
+          ) : (
+            team.shortName
+          )}
+        </div>
 
         <button
           className={`favourite-button ${isFavourite ? "favourite" : ""}`}
