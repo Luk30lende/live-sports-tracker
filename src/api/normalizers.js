@@ -49,3 +49,17 @@ export function normalizeTeam(team) {
     stadium: team.strStadium || null,
   };
 }
+
+export function normalizeStanding(team) {
+  return {
+    position: Number(team.intRank),
+    team: team.strTeam,
+    played: Number(team.intPlayed),
+    won: Number(team.intWin),
+    drawn: Number(team.intDraw),
+    lost: Number(team.intLoss),
+    points: Number(team.intPoints),
+    form: team.strForm ? team.strForm.split("") : [],
+    badge: team.strBadge || null,
+  };
+}

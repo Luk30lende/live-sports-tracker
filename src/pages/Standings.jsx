@@ -1,11 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StandingsTable from "../components/StandingsTable";
-import { standings } from "../data/mockData";
+import { getLeagueStandings } from "../api/sportsApi";
+import { leagueIds } from "../api/leagueIds";
+import { normalizeStanding } from "../api/normalizers";
 
 function Standings() {
   const [selectedLeague, setSelectedLeague] = useState("Premier League");
 
-  const currentStandings = standings[selectedLeague];
+  const [standings, setStandings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setError("");
+
+    getLeagueStandings(leagueIds.premierLeague)
+      .then((data) => {
+        const apiStandings = (data.table || []).map(normalizeStanding);
+
+        setStandings(apiStandings);
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <main className="standings-page">
@@ -19,31 +41,24 @@ function Standings() {
         </div>
       </section>
 
-      <div className="league-selector">
-        {Object.keys(standings).map((league) => (
-          <button
-            key={league}
-            className={selectedLeague === league ? "active" : ""}
-            onClick={() => setSelectedLeague(league)}
-          >
-            {league}
-          </button>
-        ))}
-      </div>
+      {loading && <div className="status-message">Loading standings...</div>}
 
-      <section className="standings-section">
-        <div className="standings-section-header">
-          <div>
-            <h2>{selectedLeague}</h2>
+      {error && <div className="status-message error">{error}</div>}
 
-            <p>Current league standings</p>
+      {!loading && !error && (
+        <section className="standings-section">
+          <div className="standings-section-header">
+            <div>
+              <h2>Premier League</h2>
+              <p>Current league standings</p>
+            </div>
+
+            <span>{standings.length} teams</span>
           </div>
 
-          <span>{currentStandings.length} teams</span>
-        </div>
-
-        <StandingsTable teams={currentStandings} />
-      </section>
+          <StandingsTable teams={standings} />
+        </section>
+      )}
     </main>
   );
 }
