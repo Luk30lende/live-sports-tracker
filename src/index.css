@@ -38,6 +38,33 @@ nav a:hover {
   color: #111827;
 }
 
+.navbar {
+  position: relative;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-links a {
+  text-decoration: none;
+}
+
+.nav-links a.active {
+  font-weight: 700;
+}
+
+.menu-button {
+  display: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 6px;
+}
+
 .dashboard {
   max-width: 1200px;
   margin: 0 auto;
@@ -102,7 +129,7 @@ nav a:hover {
 
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
@@ -378,7 +405,7 @@ nav a:hover {
 
 .teams-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
 }
 
@@ -551,10 +578,12 @@ nav a:hover {
 }
 
 .standings-table-wrapper {
+  width: 100%;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .standings-table {
@@ -761,7 +790,7 @@ nav a:hover {
 
 .players-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
 }
 
@@ -1014,4 +1043,77 @@ nav a:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px 20px;
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+
+    padding: 12px 20px 20px;
+
+    background: inherit;
+    z-index: 100;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 14px 8px;
+  }
+
+  .player-profile {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .player-profile-image {
+    width: 96px;
+    height: 96px;
+  }
+
+  .dashboard,
+  .scores-page,
+  .teams-page,
+  .standings-page,
+  .players-page {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .welcome h1 {
+    font-size: 42px;
+    line-height: 1.05;
+  }
+
+  .sports-section {
+    margin-top: 40px;
+  }
+
+  .section-heading,
+  .scores-list-header,
+  .teams-list-header,
+  .players-list-header,
+  .standings-section-header {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 }
