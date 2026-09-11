@@ -3,6 +3,7 @@ import GameCard from "../components/GameCard";
 import { getLeagueNextEvents, getLeaguePreviousEvents } from "../api/sportsApi";
 import { leagueIds } from "../api/leagueIds";
 import { normalizeGame } from "../api/normalizers";
+import LoadingMessage from "../components/LoadingMessage";
 
 function Scores() {
   const [filter, setFilter] = useState("ALL");
@@ -104,7 +105,7 @@ function Scores() {
           {!loading && !error && <span>{filteredGames.length} games</span>}
         </div>
 
-        {loading && <div className="status-message">Loading games...</div>}
+        {loading && <LoadingMessage message="Loading games..." />}
 
         {error && <div className="status-message error">{error}</div>}
 

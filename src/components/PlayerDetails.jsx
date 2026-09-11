@@ -1,3 +1,5 @@
+import LoadingMessage from "./LoadingMessage";
+
 function PlayerDetails({ player, stats, loading, error, onClose }) {
   return (
     <section className="player-details">
@@ -40,7 +42,7 @@ function PlayerDetails({ player, stats, loading, error, onClose }) {
           </div>
         </div>
 
-        {loading && <div className="status-message">Loading statistics...</div>}
+        <LoadingMessage message="Loading statistics..." />
 
         {error && <div className="status-message error">{error}</div>}
 

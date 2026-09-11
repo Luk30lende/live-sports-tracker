@@ -3,6 +3,7 @@ import StandingsTable from "../components/StandingsTable";
 import { getLeagueStandings } from "../api/sportsApi";
 import { leagueIds } from "../api/leagueIds";
 import { normalizeStanding } from "../api/normalizers";
+import LoadingMessage from "../components/LoadingMessage";
 
 function Standings() {
   const [selectedLeague, setSelectedLeague] = useState("Premier League");
@@ -41,7 +42,7 @@ function Standings() {
         </div>
       </section>
 
-      {loading && <div className="status-message">Loading standings...</div>}
+      {loading && <LoadingMessage message="Loading standings..." />}
 
       {error && <div className="status-message error">{error}</div>}
 

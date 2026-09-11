@@ -24,11 +24,15 @@ function Navbar() {
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label={menuOpen ? "Close navigation" : "Open navigation"}
         aria-expanded={menuOpen}
+        aria-controls="main-navigation"
       >
         {menuOpen ? "✕" : "☰"}
       </button>
 
-      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+      <div
+        id="main-navigation"
+        className={`nav-links ${menuOpen ? "open" : ""}`}
+      >
         <Link
           to="/"
           className={isActive("/") ? "active" : ""}

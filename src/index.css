@@ -1117,3 +1117,64 @@ nav a:hover {
     flex-wrap: wrap;
   }
 }
+
+.player-card:focus-visible,
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.loading-message {
+  min-height: 160px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  font-size: 14px;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+
+  border: 3px solid currentColor;
+  border-top-color: transparent;
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  padding: 24px;
+  border-radius: 10px;
+  border: 1px solid currentColor;
+
+  text-align: center;
+}
+
+.error-message strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.error-message p {
+  margin-bottom: 16px;
+}
+
+.error-message button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

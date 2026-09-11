@@ -5,6 +5,12 @@ function PlayerCard({ player, onSelect }) {
       role="button"
       tabIndex="0"
       onClick={() => onSelect(player)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect(player);
+        }
+      }}
     >
       <div className="player-card-header">
         <div className="player-avatar">

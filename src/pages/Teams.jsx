@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TeamCard from "../components/TeamCard";
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
+import LoadingMessage from "../components/LoadingMessage";
 
 function Teams() {
   const [sportFilter, setSportFilter] = useState("ALL");
@@ -83,7 +84,7 @@ function Teams() {
         </button>
       </div>
 
-      {loading && <div className="status-message">Loading teams...</div>}
+      {loading && <LoadingMessage message="Loading teams..." />}
 
       {error && <div className="status-message error">{error}</div>}
 

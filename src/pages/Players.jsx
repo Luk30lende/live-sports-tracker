@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PlayerCard from "../components/PlayerCard";
 import PlayerDetails from "../components/PlayerDetails";
+import LoadingMessage from "../components/LoadingMessage";
 
 import {
   getLeagueTeams,
@@ -121,7 +122,7 @@ function Players() {
         <label htmlFor="team">Select Team</label>
 
         {loadingTeams ? (
-          <p>Loading teams...</p>
+          <LoadingMessage message="Loading teams..." />
         ) : (
           <select
             id="team"
@@ -141,9 +142,7 @@ function Players() {
 
       {error && <div className="status-message error">{error}</div>}
 
-      {loadingPlayers && (
-        <div className="status-message">Loading players...</div>
-      )}
+      {loadingPlayers && <LoadingMessage message="Loading players..." />}
 
       {selectedPlayer ? (
         <PlayerDetails
