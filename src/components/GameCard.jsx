@@ -9,7 +9,13 @@ function GameCard({ game }) {
 
       <div className="teams">
         <div className="team">
-          <div className="team-logo">{game.homeTeam.charAt(0)}</div>
+          <div className="team-logo">
+            {game.homeTeamBadge ? (
+              <img src={game.homeTeamBadge} alt={`${game.homeTeam} badge`} />
+            ) : (
+              game.homeTeam.charAt(0)
+            )}
+          </div>
 
           <span>{game.homeTeam}</span>
         </div>
@@ -27,7 +33,13 @@ function GameCard({ game }) {
         </div>
 
         <div className="team">
-          <div className="team-logo">{game.awayTeam.charAt(0)}</div>
+          <div className="team-logo">
+            {game.awayTeamBadge ? (
+              <img src={game.awayTeamBadge} alt={`${game.awayTeam} badge`} />
+            ) : (
+              game.awayTeam.charAt(0)
+            )}
+          </div>
 
           <span>{game.awayTeam}</span>
         </div>
