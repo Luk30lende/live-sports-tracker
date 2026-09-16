@@ -3,13 +3,11 @@ import TeamCard from "../components/TeamCard";
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
 import LoadingMessage from "../components/LoadingMessage";
-import { getFavouriteTeams, saveFavouriteTeams } from "../utils/storage";
+import useFavouriteTeams from "../hooks/useFavouriteTeams";
 
 function Teams() {
   const [sportFilter, setSportFilter] = useState("ALL");
-  const [favouriteTeams, setFavouriteTeams] = useState(() =>
-    getFavouriteTeams(),
-  );
+  const { favouriteTeams, toggleFavourite } = useFavouriteTeams();
 
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,24 +31,10 @@ function Teams() {
       });
   }, []);
 
-  useEffect(() => {
-    saveFavouriteTeams(favouriteTeams);
-  }, [favouriteTeams]);
-
   const filteredTeams =
     sportFilter === "ALL"
       ? teams
       : teams.filter((team) => team.sport === sportFilter);
-
-  const toggleFavourite = (teamId) => {
-    setFavouriteTeams((currentFavourites) => {
-      if (currentFavourites.includes(teamId)) {
-        return currentFavourites.filter((id) => id !== teamId);
-      }
-
-      return [...currentFavourites, teamId];
-    });
-  };
 
   return (
     <main className="teams-page">

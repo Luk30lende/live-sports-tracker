@@ -3,11 +3,13 @@ import GameCard from "../components/GameCard";
 import { getLeagueNextEvents, getLeaguePreviousEvents } from "../api/sportsApi";
 import { leagueIds } from "../api/leagueIds";
 import { normalizeGame } from "../api/normalizers";
-import { getFavouriteTeams } from "../utils/storage";
+import useFavouriteTeams from "../hooks/useFavouriteTeams";
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
 
 function Home() {
+  const { favouriteTeams: favouriteTeamIds } = useFavouriteTeams();
+
   const [games, setGames] = useState([]);
   const [teams, setTeams] = useState([]);
 
@@ -57,8 +59,6 @@ function Home() {
         setLoadingTeams(false);
       });
   }, []);
-
-  const favouriteTeamIds = getFavouriteTeams();
 
   const favouriteTeams = teams.filter((team) =>
     favouriteTeamIds.includes(team.id),
