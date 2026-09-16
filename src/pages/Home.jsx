@@ -3,12 +3,19 @@ import GameCard from "../components/GameCard";
 import { getLeagueNextEvents, getLeaguePreviousEvents } from "../api/sportsApi";
 import { leagueIds } from "../api/leagueIds";
 import { normalizeGame } from "../api/normalizers";
+import { getFavouriteTeams } from "../utils/storage";
+import { getLeagueTeams } from "../api/sportsApi";
+import { normalizeTeam } from "../api/normalizers";
 
 function Home() {
   const [games, setGames] = useState([]);
+  const [teams, setTeams] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingTeams, setLoadingTeams] = useState(true);
+
   const [error, setError] = useState("");
+  const [teamsError, setTeamsError] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -32,6 +39,30 @@ function Home() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    setLoadingTeams(true);
+    setTeamsError("");
+
+    getLeagueTeams("English Premier League")
+      .then((data) => {
+        const apiTeams = (data.teams || []).map(normalizeTeam);
+
+        setTeams(apiTeams);
+      })
+      .catch((error) => {
+        setTeamsError(error.message);
+      })
+      .finally(() => {
+        setLoadingTeams(false);
+      });
+  }, []);
+
+  const favouriteTeamIds = getFavouriteTeams();
+
+  const favouriteTeams = teams.filter((team) =>
+    favouriteTeamIds.includes(team.id),
+  );
 
   const liveGames = games.filter((game) => game.status === "LIVE");
 
@@ -64,6 +95,52 @@ function Home() {
 
       {!loading && !error && (
         <>
+          <section className="sports-section">
+            <div className="section-heading">
+              <div>
+                <h2>My Teams</h2>
+                <p>Teams you are following</p>
+              </div>
+
+              <span>{favouriteTeams.length} teams</span>
+            </div>
+
+            {loadingTeams ? (
+              <div className="status-message">Loading your teams...</div>
+            ) : teamsError ? (
+              <div className="status-message error">{teamsError}</div>
+            ) : favouriteTeams.length > 0 ? (
+              <div className="teams-grid">
+                {favouriteTeams.map((team) => (
+                  <div className="team-card" key={team.id}>
+                    <div className="team-card-top">
+                      <div className="team-logo-large">
+                        {team.badge ? (
+                          <img src={team.badge} alt={`${team.name} badge`} />
+                        ) : (
+                          team.shortName
+                        )}
+                      </div>
+
+                      <span className="live-badge">Following</span>
+                    </div>
+
+                    <div className="team-card-info">
+                      <h3>{team.name}</h3>
+                      <p>{team.league}</p>
+                      <span>{team.sport}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="status-message">
+                You are not following any teams yet. Visit the Teams page to
+                follow your favourites.
+              </div>
+            )}
+          </section>
+
           <section className="sports-section">
             <div className="section-heading">
               <div>
