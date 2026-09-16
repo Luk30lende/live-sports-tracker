@@ -3,10 +3,13 @@ import TeamCard from "../components/TeamCard";
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
 import LoadingMessage from "../components/LoadingMessage";
+import { getFavouriteTeams, saveFavouriteTeams } from "../utils/storage";
 
 function Teams() {
   const [sportFilter, setSportFilter] = useState("ALL");
-  const [favouriteTeams, setFavouriteTeams] = useState([]);
+  const [favouriteTeams, setFavouriteTeams] = useState(() =>
+    getFavouriteTeams(),
+  );
 
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +32,10 @@ function Teams() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    saveFavouriteTeams(favouriteTeams);
+  }, [favouriteTeams]);
 
   const filteredTeams =
     sportFilter === "ALL"
