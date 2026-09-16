@@ -64,6 +64,12 @@ function Home() {
     favouriteTeamIds.includes(team.id),
   );
 
+  const myTeamGames = games.filter((game) =>
+    favouriteTeamIds.some(
+      (teamId) => teamId === game.homeTeamId || teamId === game.awayTeamId,
+    ),
+  );
+
   const liveGames = games.filter((game) => game.status === "LIVE");
 
   const upcomingGames = games.filter((game) => game.status === "UPCOMING");
@@ -137,6 +143,33 @@ function Home() {
               <div className="status-message">
                 You are not following any teams yet. Visit the Teams page to
                 follow your favourites.
+              </div>
+            )}
+          </section>
+
+          <section className="sports-section">
+            <div className="section-heading">
+              <div>
+                <h2>My Team Games</h2>
+                <p>Games involving teams you follow</p>
+              </div>
+
+              <span>{myTeamGames.length} games</span>
+            </div>
+
+            {favouriteTeamIds.length === 0 ? (
+              <div className="status-message">
+                Follow a team to see their games here.
+              </div>
+            ) : myTeamGames.length > 0 ? (
+              <div className="games-grid">
+                {myTeamGames.map((game) => (
+                  <GameCard key={game.id} game={game} />
+                ))}
+              </div>
+            ) : (
+              <div className="status-message">
+                No games found for your teams.
               </div>
             )}
           </section>

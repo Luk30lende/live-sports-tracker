@@ -14,7 +14,9 @@ export function normalizeGame(event) {
     id: event.idEvent,
     league: event.strLeague,
     homeTeam: event.strHomeTeam,
+    homeTeamId: event.idHomeTeam,
     awayTeam: event.strAwayTeam,
+    awayTeamId: event.idAwayTeam,
 
     homeScore: hasScores ? Number(event.intHomeScore) : null,
 
