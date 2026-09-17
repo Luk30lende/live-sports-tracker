@@ -58,6 +58,14 @@ function Navbar() {
         </Link>
 
         <Link
+          to="/my-teams"
+          className={isActive("/my-teams") ? "active" : ""}
+          onClick={closeMenu}
+        >
+          My Teams
+        </Link>
+
+        <Link
           to="/standings"
           className={isActive("/standings") ? "active" : ""}
           onClick={closeMenu}

@@ -1178,3 +1178,55 @@ a:focus-visible {
   border-radius: 6px;
   cursor: pointer;
 }
+
+.my-teams-page {
+  padding: 48px;
+}
+
+.my-teams-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.my-teams-header h1 {
+  margin-bottom: 12px;
+}
+
+.my-teams-list {
+  margin-top: 20px;
+}
+
+.my-teams-list-header {
+  margin-bottom: 24px;
+}
+
+.my-teams-list-header h2 {
+  margin-bottom: 6px;
+}
+
+.my-teams-list-header p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+.my-teams-empty {
+  max-width: 600px;
+}
+
+.my-teams-empty h2 {
+  margin-bottom: 8px;
+}
+
+.my-teams-empty p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .my-teams-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
