@@ -3,11 +3,11 @@ import TeamCard from "../components/TeamCard";
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
 import LoadingMessage from "../components/LoadingMessage";
-import useFavouriteTeams from "../hooks/useFavouriteTeams";
+import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function Teams() {
   const [sportFilter, setSportFilter] = useState("ALL");
-  const { favouriteTeams, toggleFavourite } = useFavouriteTeams();
+  const { favouriteTeams, toggleFavourite } = useFavouriteTeamsContext();
 
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
