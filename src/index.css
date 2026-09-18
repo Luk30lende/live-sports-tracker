@@ -1261,3 +1261,79 @@ a:focus-visible {
   font-size: 13px;
   opacity: 0.65;
 }
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-status {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.game-status.live {
+  font-weight: 800;
+}
+
+.game-status.finished {
+  opacity: 0.7;
+}
+
+.game-status.upcoming {
+  opacity: 0.7;
+}
+
+.game-card-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.game-kickoff strong {
+  font-size: 20px;
+}
+
+.game-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.game-score strong {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.game-score span {
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.game-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid #e5e5e5;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.game-live-indicator {
+  font-weight: 600;
+}
+
+.game-venue {
+  text-align: right;
+}

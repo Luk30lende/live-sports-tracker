@@ -1,10 +1,70 @@
 function GameCard({ game }) {
+  const formatGameDate = (date) => {
+    if (!date) {
+      return "Date unavailable";
+    }
+
+    return new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    });
+  };
+
+  const getStatusLabel = () => {
+    if (game.status === "LIVE") {
+      return "LIVE";
+    }
+
+    if (game.status === "FINISHED") {
+      return "Full Time";
+    }
+
+    return "Upcoming";
+  };
+
+  const getScoreContent = () => {
+    if (game.status === "UPCOMING") {
+      return (
+        <div className="game-kickoff">
+          <strong>{game.time || "TBA"}</strong>
+        </div>
+      );
+    }
+
+    return (
+      <div className="game-score">
+        <strong>{game.homeScore ?? "-"}</strong>
+
+        <span>-</span>
+
+        <strong>{game.awayScore ?? "-"}</strong>
+      </div>
+    );
+  };
+
   return (
-    <div className="game-card">
+    <article className="game-card">
       <div className="game-card-header">
         <span>{game.league}</span>
 
-        {game.status === "LIVE" && <span className="live-badge">LIVE</span>}
+        <span
+          className={`game-status ${
+            game.status === "LIVE"
+              ? "live"
+              : game.status === "FINISHED"
+                ? "finished"
+                : "upcoming"
+          }`}
+        >
+          {getStatusLabel()}
+        </span>
+      </div>
+
+      <div className="game-card-date">
+        <span>{formatGameDate(game.date)}</span>
+
+        {game.status === "UPCOMING" && game.time && <span>{game.time}</span>}
       </div>
 
       <div className="teams">
@@ -20,17 +80,7 @@ function GameCard({ game }) {
           <span>{game.homeTeam}</span>
         </div>
 
-        <div className="score">
-          {game.status === "UPCOMING" ? (
-            <strong>{game.time}</strong>
-          ) : (
-            <>
-              <strong>{game.homeScore}</strong>
-              <span>-</span>
-              <strong>{game.awayScore}</strong>
-            </>
-          )}
-        </div>
+        <div className="score">{getScoreContent()}</div>
 
         <div className="team">
           <div className="team-logo">
@@ -45,14 +95,18 @@ function GameCard({ game }) {
         </div>
       </div>
 
-      <div className="game-time">
-        {game.status === "LIVE"
-          ? `${game.minute}'`
-          : game.status === "FINISHED"
-            ? "Full Time"
-            : "Upcoming"}
+      <div className="game-card-footer">
+        {game.status === "LIVE" && (
+          <span className="game-live-indicator">● Match in progress</span>
+        )}
+
+        {game.status === "FINISHED" && <span>Match completed</span>}
+
+        {game.status === "UPCOMING" && <span>Kickoff scheduled</span>}
+
+        {game.venue && <span className="game-venue">{game.venue}</span>}
       </div>
-    </div>
+    </article>
   );
 }
 
