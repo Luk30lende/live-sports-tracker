@@ -1230,3 +1230,34 @@ a:focus-visible {
     flex-direction: column;
   }
 }
+
+.scores-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.score-date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.score-date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.score-date-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.score-date-header span {
+  font-size: 13px;
+  opacity: 0.65;
+}

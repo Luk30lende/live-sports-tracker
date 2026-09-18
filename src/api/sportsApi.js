@@ -37,3 +37,7 @@ export function getLeagueStandings(leagueId) {
 export function getLeagueTeams(leagueName) {
   return request(`search_all_teams.php?l=${encodeURIComponent(leagueName)}`);
 }
+
+export function getEventsByDay(date, leagueId) {
+  return request(`eventsday.php?d=${date}&l=${leagueId}`);
+}

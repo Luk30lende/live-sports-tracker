@@ -1,33 +1,56 @@
 import { useEffect, useState } from "react";
+
 import GameCard from "../components/GameCard";
-import { getLeagueNextEvents, getLeaguePreviousEvents } from "../api/sportsApi";
+import LoadingMessage from "../components/LoadingMessage";
+
+import { getEventsByDay } from "../api/sportsApi";
+
 import { leagueIds } from "../api/leagueIds";
 import { normalizeGame } from "../api/normalizers";
-import LoadingMessage from "../components/LoadingMessage";
 
 function Scores() {
   const [filter, setFilter] = useState("ALL");
-
   const [games, setGames] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   useEffect(() => {
     setLoading(true);
     setError("");
 
-    Promise.all([
-      getLeagueNextEvents(leagueIds.premierLeague),
-      getLeaguePreviousEvents(leagueIds.premierLeague),
-    ])
-      .then(([nextData, previousData]) => {
-        const nextGames = (nextData.events || []).map(normalizeGame);
+    const today = new Date();
 
-        const previousGames = (previousData.events || []).map(normalizeGame);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
 
-        setGames([...previousGames, ...nextGames]);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    };
+
+    const dates = [
+      formatDate(yesterday),
+      formatDate(today),
+      formatDate(tomorrow),
+    ];
+
+    Promise.all(
+      dates.map((date) => getEventsByDay(date, leagueIds.premierLeague)),
+    )
+      .then((responses) => {
+        const allGames = responses.flatMap((data) =>
+          (data.events || []).map(normalizeGame),
+        );
+
+        setGames(allGames);
       })
       .catch((error) => {
         setError(error.message);
@@ -55,6 +78,69 @@ function Scores() {
 
     return "All Games";
   };
+
+  const formatDateLabel = (date) => {
+    if (!date) {
+      return "Date unavailable";
+    }
+
+    const gameDate = new Date(`${date}T00:00:00`);
+    const today = new Date();
+
+    const todayStart = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+    const gameDateStart = new Date(
+      gameDate.getFullYear(),
+      gameDate.getMonth(),
+      gameDate.getDate(),
+    );
+
+    if (gameDateStart.getTime() === todayStart.getTime()) {
+      return "Today";
+    }
+
+    if (gameDateStart.getTime() === tomorrowStart.getTime()) {
+      return "Tomorrow";
+    }
+
+    return gameDate.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const groupedGames = filteredGames.reduce((groups, game) => {
+    const date = game.date || "unknown";
+
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+
+    groups[date].push(game);
+
+    return groups;
+  }, {});
+
+  const sortedGroups = Object.entries(groupedGames).sort(([dateA], [dateB]) => {
+    if (dateA === "unknown") {
+      return 1;
+    }
+
+    if (dateB === "unknown") {
+      return -1;
+    }
+
+    return new Date(dateA) - new Date(dateB);
+  });
 
   return (
     <main className="scores-page">
@@ -114,9 +200,24 @@ function Scores() {
         )}
 
         {!loading && !error && filteredGames.length > 0 && (
-          <div className="games-grid">
-            {filteredGames.map((game) => (
-              <GameCard key={game.id} game={game} />
+          <div className="scores-groups">
+            {sortedGroups.map(([date, dateGames]) => (
+              <section className="score-date-group" key={date}>
+                <div className="score-date-header">
+                  <h3>{formatDateLabel(date)}</h3>
+
+                  <span>
+                    {dateGames.length}{" "}
+                    {dateGames.length === 1 ? "game" : "games"}
+                  </span>
+                </div>
+
+                <div className="games-grid">
+                  {dateGames.map((game) => (
+                    <GameCard key={game.id} game={game} />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}
