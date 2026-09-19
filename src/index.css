@@ -1337,3 +1337,26 @@ a:focus-visible {
 .game-venue {
   text-align: right;
 }
+
+.game-card-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.favourite-game {
+  position: relative;
+}
+
+.favourite-game-badge {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.favourite-team {
+  font-weight: 700;
+}
+
+.favourite-team span {
+  font-weight: 700;
+}

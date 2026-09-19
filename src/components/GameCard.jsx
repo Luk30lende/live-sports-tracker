@@ -1,4 +1,10 @@
-function GameCard({ game }) {
+function GameCard({ game, favouriteTeamIds = [] }) {
+  const isHomeFavourite = favouriteTeamIds.includes(game.homeTeamId);
+
+  const isAwayFavourite = favouriteTeamIds.includes(game.awayTeamId);
+
+  const isFavouriteGame = isHomeFavourite || isAwayFavourite;
+
   const formatGameDate = (date) => {
     if (!date) {
       return "Date unavailable";
@@ -44,21 +50,32 @@ function GameCard({ game }) {
   };
 
   return (
-    <article className="game-card">
+    <article className={`game-card ${isFavouriteGame ? "favourite-game" : ""}`}>
       <div className="game-card-header">
         <span>{game.league}</span>
 
-        <span
-          className={`game-status ${
-            game.status === "LIVE"
-              ? "live"
-              : game.status === "FINISHED"
-                ? "finished"
-                : "upcoming"
-          }`}
-        >
-          {getStatusLabel()}
-        </span>
+        <div className="game-card-header-right">
+          {isFavouriteGame && (
+            <span
+              className="favourite-game-badge"
+              aria-label="Favourite team playing"
+            >
+              ★
+            </span>
+          )}
+
+          <span
+            className={`game-status ${
+              game.status === "LIVE"
+                ? "live"
+                : game.status === "FINISHED"
+                  ? "finished"
+                  : "upcoming"
+            }`}
+          >
+            {getStatusLabel()}
+          </span>
+        </div>
       </div>
 
       <div className="game-card-date">
@@ -68,7 +85,7 @@ function GameCard({ game }) {
       </div>
 
       <div className="teams">
-        <div className="team">
+        <div className={`team ${isHomeFavourite ? "favourite-team" : ""}`}>
           <div className="team-logo">
             {game.homeTeamBadge ? (
               <img src={game.homeTeamBadge} alt={`${game.homeTeam} badge`} />
@@ -83,12 +100,14 @@ function GameCard({ game }) {
         <div className="score">{getScoreContent()}</div>
 
         <div className="team">
-          <div className="team-logo">
-            {game.awayTeamBadge ? (
-              <img src={game.awayTeamBadge} alt={`${game.awayTeam} badge`} />
-            ) : (
-              game.awayTeam.charAt(0)
-            )}
+          <div className={`team ${isAwayFavourite ? "favourite-team" : ""}`}>
+            <div className="team-logo">
+              {game.awayTeamBadge ? (
+                <img src={game.awayTeamBadge} alt={`${game.awayTeam} badge`} />
+              ) : (
+                game.awayTeam.charAt(0)
+              )}
+            </div>
           </div>
 
           <span>{game.awayTeam}</span>

@@ -249,7 +249,11 @@ function Scores() {
 
                 <div className="games-grid">
                   {dateGames.map((game) => (
-                    <GameCard key={game.id} game={game} />
+                    <GameCard
+                      key={game.id}
+                      game={game}
+                      favouriteTeamIds={favouriteTeams}
+                    />
                   ))}
                 </div>
               </section>

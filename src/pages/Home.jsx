@@ -164,7 +164,11 @@ function Home() {
             ) : myTeamGames.length > 0 ? (
               <div className="games-grid">
                 {myTeamGames.map((game) => (
-                  <GameCard key={game.id} game={game} />
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    favouriteTeamIds={favouriteTeamIds}
+                  />
                 ))}
               </div>
             ) : (
