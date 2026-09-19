@@ -3,6 +3,7 @@ import TeamCard from "../components/TeamCard";
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
 import LoadingMessage from "../components/LoadingMessage";
+import ErrorMessage from "../components/ErrorMessage";
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function Teams() {
@@ -13,7 +14,7 @@ function Teams() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const loadTeams = () => {
     setLoading(true);
     setError("");
 
@@ -25,10 +26,15 @@ function Teams() {
       })
       .catch((error) => {
         setError(error.message);
+        setTeams([]);
       })
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadTeams();
   }, []);
 
   const filteredTeams =
@@ -77,7 +83,7 @@ function Teams() {
 
       {loading && <LoadingMessage message="Loading teams..." />}
 
-      {error && <div className="status-message error">{error}</div>}
+      {error && <ErrorMessage message={error} onRetry={loadTeams} />}
 
       <section className="teams-list">
         <div className="teams-list-header">
