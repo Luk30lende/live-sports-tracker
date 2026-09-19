@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import GameCard from "../components/GameCard";
 import LoadingMessage from "../components/LoadingMessage";
+import ErrorMessage from "../components/ErrorMessage";
 
 import { getEventsByDay } from "../api/sportsApi";
 
@@ -16,7 +17,7 @@ function Scores() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const loadGames = () => {
     setLoading(true);
     setError("");
 
@@ -56,10 +57,15 @@ function Scores() {
       })
       .catch((error) => {
         setError(error.message);
+        setGames([]);
       })
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadGames();
   }, []);
 
   const filteredGames = games.filter((game) => {
@@ -217,7 +223,7 @@ function Scores() {
 
         {loading && <LoadingMessage message="Loading games..." />}
 
-        {error && <div className="status-message error">{error}</div>}
+        {error && <ErrorMessage message={error} onRetry={loadGames} />}
 
         {!loading && !error && filteredGames.length === 0 && (
           <div className="status-message">
