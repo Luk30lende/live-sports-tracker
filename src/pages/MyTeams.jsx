@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+
 import LoadingMessage from "../components/LoadingMessage";
+import ErrorMessage from "../components/ErrorMessage";
+
 import { getLeagueTeams } from "../api/sportsApi";
 import { normalizeTeam } from "../api/normalizers";
+
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function MyTeams() {
@@ -9,11 +13,11 @@ function MyTeams() {
 
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [teamsError, setTeamsError] = useState("");
 
-  useEffect(() => {
+  const loadTeams = () => {
     setLoading(true);
-    setError("");
+    setTeamsError("");
 
     getLeagueTeams("English Premier League")
       .then((data) => {
@@ -22,11 +26,16 @@ function MyTeams() {
         setTeams(apiTeams);
       })
       .catch((error) => {
-        setError(error.message);
+        setTeamsError(error.message);
+        setTeams([]);
       })
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadTeams();
   }, []);
 
   const myTeams = teams.filter((team) => favouriteTeams.includes(team.id));
@@ -49,9 +58,9 @@ function MyTeams() {
 
       {loading && <LoadingMessage message="Loading your teams..." />}
 
-      {error && <div className="status-message error">{error}</div>}
+      {teamsError && <ErrorMessage message={teamsError} onRetry={loadTeams} />}
 
-      {!loading && !error && myTeams.length === 0 && (
+      {!loading && !teamsError && myTeams.length === 0 && (
         <section className="my-teams-empty">
           <div className="status-message">
             <h2>No teams yet</h2>
@@ -64,7 +73,7 @@ function MyTeams() {
         </section>
       )}
 
-      {!loading && !error && myTeams.length > 0 && (
+      {!loading && !teamsError && myTeams.length > 0 && (
         <section className="my-teams-list">
           <div className="my-teams-list-header">
             <div>
