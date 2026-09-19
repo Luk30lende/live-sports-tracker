@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+
 import PlayerCard from "../components/PlayerCard";
 import PlayerDetails from "../components/PlayerDetails";
 import LoadingMessage from "../components/LoadingMessage";
+import ErrorMessage from "../components/ErrorMessage";
 
 import {
   getLeagueTeams,
@@ -26,36 +28,16 @@ function Players() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const [playerStats, setPlayerStats] = useState([]);
-
   const [loadingStats, setLoadingStats] = useState(false);
 
   const [statsError, setStatsError] = useState("");
 
-  const [error, setError] = useState("");
+  const [teamsError, setTeamsError] = useState("");
+  const [playersError, setPlayersError] = useState("");
 
-  const handlePlayerSelect = (player) => {
-    setSelectedPlayer(player);
-    setPlayerStats([]);
-    setStatsError("");
-    setLoadingStats(true);
-
-    getPlayerStats(player.id)
-      .then((data) => {
-        const apiStats = (data.playerstats || []).map(normalizePlayerStats);
-
-        setPlayerStats(apiStats);
-      })
-      .catch((error) => {
-        setStatsError(error.message);
-      })
-      .finally(() => {
-        setLoadingStats(false);
-      });
-  };
-
-  useEffect(() => {
+  const loadTeams = () => {
     setLoadingTeams(true);
-    setError("");
+    setTeamsError("");
 
     getLeagueTeams("English Premier League")
       .then((data) => {
@@ -70,80 +52,75 @@ function Players() {
         }
       })
       .catch((error) => {
-        setError(error.message);
+        setTeamsError(error.message);
+        setTeams([]);
       })
       .finally(() => {
         setLoadingTeams(false);
       });
-  }, []);
+  };
 
-  useEffect(() => {
-    if (!selectedTeamId) {
+  const loadPlayers = (teamId) => {
+    if (!teamId) {
+      setPlayers([]);
       return;
     }
 
     setLoadingPlayers(true);
-    setError("");
+    setPlayersError("");
 
-    getTeamPlayers(selectedTeamId)
+    getTeamPlayers(teamId)
       .then((data) => {
         const apiPlayers = (data.player || []).map(normalizePlayer);
 
         setPlayers(apiPlayers);
       })
       .catch((error) => {
-        setError(error.message);
+        setPlayersError(error.message);
         setPlayers([]);
       })
       .finally(() => {
         setLoadingPlayers(false);
       });
+  };
+
+  const loadPlayerStats = (player) => {
+    setSelectedPlayer(player);
+    setPlayerStats([]);
+    setStatsError("");
+    setLoadingStats(true);
+
+    getPlayerStats(player.id)
+      .then((data) => {
+        const apiStats = (data.playerstats || []).map(normalizePlayerStats);
+
+        setPlayerStats(apiStats);
+      })
+      .catch((error) => {
+        setStatsError(error.message);
+        setPlayerStats([]);
+      })
+      .finally(() => {
+        setLoadingStats(false);
+      });
+  };
+
+  const handlePlayerSelect = (player) => {
+    loadPlayerStats(player);
+  };
+
+  useEffect(() => {
+    loadTeams();
+  }, []);
+
+  useEffect(() => {
+    loadPlayers(selectedTeamId);
   }, [selectedTeamId]);
 
   const selectedTeam = teams.find((team) => team.id === selectedTeamId);
 
   return (
     <main className="players-page">
-      <section className="players-header">
-        <div>
-          <p className="eyebrow">PLAYERS</p>
-
-          <h1>Players</h1>
-
-          <p>Explore players and squad information from the Premier League.</p>
-        </div>
-
-        {!loadingPlayers && !error && (
-          <div className="player-count">{players.length} Players</div>
-        )}
-      </section>
-
-      <section className="player-team-selector">
-        <label htmlFor="team">Select Team</label>
-
-        {loadingTeams ? (
-          <LoadingMessage message="Loading teams..." />
-        ) : (
-          <select
-            id="team"
-            value={selectedTeamId}
-            onChange={(event) => setSelectedTeamId(event.target.value)}
-          >
-            <option value="">Select a team</option>
-
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.name}
-              </option>
-            ))}
-          </select>
-        )}
-      </section>
-
-      {error && <div className="status-message error">{error}</div>}
-
-      {loadingPlayers && <LoadingMessage message="Loading players..." />}
-
       {selectedPlayer ? (
         <PlayerDetails
           player={selectedPlayer}
@@ -151,37 +128,98 @@ function Players() {
           loading={loadingStats}
           error={statsError}
           onClose={() => setSelectedPlayer(null)}
+          onRetry={() => loadPlayerStats(selectedPlayer)}
         />
       ) : (
         <>
-          {!loadingPlayers && !error && selectedTeam && players.length > 0 && (
-            <section className="players-list">
-              <div className="players-list-header">
-                <div>
-                  <h2>{selectedTeam.name}</h2>
+          <section className="players-header">
+            <div>
+              <p className="eyebrow">PLAYERS</p>
 
-                  <p>Current squad information</p>
+              <h1>Players</h1>
+
+              <p>
+                Explore players and squad information from the Premier League.
+              </p>
+            </div>
+
+            {!loadingPlayers && !playersError && selectedTeam && (
+              <div className="player-count">{players.length} Players</div>
+            )}
+          </section>
+
+          <section className="player-team-selector">
+            <label htmlFor="team">Select Team</label>
+
+            {loadingTeams ? (
+              <LoadingMessage message="Loading teams..." />
+            ) : (
+              <select
+                id="team"
+                value={selectedTeamId}
+                onChange={(event) => setSelectedTeamId(event.target.value)}
+                disabled={teamsError}
+              >
+                <option value="">Select a team</option>
+
+                {teams.map((team) => (
+                  <option key={team.id} value={team.id}>
+                    {team.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {teamsError && (
+              <ErrorMessage message={teamsError} onRetry={loadTeams} />
+            )}
+          </section>
+
+          {playersError && (
+            <ErrorMessage
+              message={playersError}
+              onRetry={() => loadPlayers(selectedTeamId)}
+            />
+          )}
+
+          {loadingPlayers && <LoadingMessage message="Loading players..." />}
+
+          {!loadingPlayers &&
+            !playersError &&
+            selectedTeam &&
+            players.length > 0 && (
+              <section className="players-list">
+                <div className="players-list-header">
+                  <div>
+                    <h2>{selectedTeam.name}</h2>
+
+                    <p>Current squad information</p>
+                  </div>
+
+                  <span>{players.length} players</span>
                 </div>
 
-                <span>{players.length} players</span>
-              </div>
+                <div className="players-grid">
+                  {players.map((player) => (
+                    <PlayerCard
+                      key={player.id}
+                      player={player}
+                      onSelect={handlePlayerSelect}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
 
-              <div className="players-grid">
-                {players.map((player) => (
-                  <PlayerCard
-                    key={player.id}
-                    player={player}
-                    onSelect={handlePlayerSelect}
-                  />
-                ))}
+          {!loadingPlayers &&
+            !playersError &&
+            selectedTeam &&
+            players.length === 0 && (
+              <div className="status-message">
+                No players found for this team.
               </div>
-            </section>
-          )}
+            )}
         </>
-      )}
-
-      {!loadingPlayers && !error && selectedTeam && players.length === 0 && (
-        <div className="status-message">No players found for this team.</div>
       )}
     </main>
   );

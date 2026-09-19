@@ -1,6 +1,7 @@
 import LoadingMessage from "./LoadingMessage";
+import ErrorMessage from "./ErrorMessage";
 
-function PlayerDetails({ player, stats, loading, error, onClose }) {
+function PlayerDetails({ player, stats, loading, error, onClose, onRetry }) {
   return (
     <section className="player-details">
       <div className="player-details-header">
@@ -44,7 +45,7 @@ function PlayerDetails({ player, stats, loading, error, onClose }) {
 
         <LoadingMessage message="Loading statistics..." />
 
-        {error && <div className="status-message error">{error}</div>}
+        {error && <ErrorMessage message={error} onRetry={onRetry} />}
 
         {!loading && !error && stats.length === 0 && (
           <div className="status-message">
