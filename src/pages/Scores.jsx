@@ -7,8 +7,10 @@ import { getEventsByDay } from "../api/sportsApi";
 
 import { leagueIds } from "../api/leagueIds";
 import { normalizeGame } from "../api/normalizers";
+import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function Scores() {
+  const { favouriteTeams } = useFavouriteTeamsContext();
   const [filter, setFilter] = useState("ALL");
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,8 +62,19 @@ function Scores() {
       });
   }, []);
 
-  const filteredGames =
-    filter === "ALL" ? games : games.filter((game) => game.status === filter);
+  const filteredGames = games.filter((game) => {
+    if (filter === "ALL") {
+      return true;
+    }
+
+    if (filter === "MY_TEAMS") {
+      return favouriteTeams.some(
+        (teamId) => teamId === game.homeTeamId || teamId === game.awayTeamId,
+      );
+    }
+
+    return game.status === filter;
+  });
 
   const getTitle = () => {
     if (filter === "LIVE") {
@@ -74,6 +87,10 @@ function Scores() {
 
     if (filter === "FINISHED") {
       return "Finished Games";
+    }
+
+    if (filter === "MY_TEAMS") {
+      return "My Team Games";
     }
 
     return "All Games";
@@ -163,6 +180,13 @@ function Scores() {
         </button>
 
         <button
+          className={filter === "MY_TEAMS" ? "active" : ""}
+          onClick={() => setFilter("MY_TEAMS")}
+        >
+          My Teams
+        </button>
+
+        <button
           className={filter === "LIVE" ? "active" : ""}
           onClick={() => setFilter("LIVE")}
         >
@@ -196,7 +220,18 @@ function Scores() {
         {error && <div className="status-message error">{error}</div>}
 
         {!loading && !error && filteredGames.length === 0 && (
-          <div className="status-message">No games found.</div>
+          <div className="status-message">
+            {filter === "MY_TEAMS" && favouriteTeams.length === 0 ? (
+              <>
+                <h3>No teams followed yet</h3>
+                <p>
+                  Follow a team from the Teams page to see their games here.
+                </p>
+              </>
+            ) : (
+              "No games found."
+            )}
+          </div>
         )}
 
         {!loading && !error && filteredGames.length > 0 && (
