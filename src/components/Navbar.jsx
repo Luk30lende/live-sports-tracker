@@ -1,27 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+
   const location = useLocation();
 
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
+  const toggleMenu = () => {
+    setMenuOpen((current) => !current);
+  };
+
   const isActive = (path) => {
     return location.pathname === path;
   };
 
+  useEffect(() => {
+    closeMenu();
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === "Escape" && menuOpen) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpen]);
+
   return (
-    <nav className="navbar">
+    <nav className="navbar" aria-label="Main navigation">
       <Link to="/" className="logo" onClick={closeMenu}>
         Sports Tracker
       </Link>
 
       <button
+        type="button"
         className="menu-button"
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={toggleMenu}
         aria-label={menuOpen ? "Close navigation" : "Open navigation"}
         aria-expanded={menuOpen}
         aria-controls="main-navigation"
