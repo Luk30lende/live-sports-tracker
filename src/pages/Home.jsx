@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
+
 import GameCard from "../components/GameCard";
-import { getLeagueNextEvents, getLeaguePreviousEvents } from "../api/sportsApi";
+import ErrorMessage from "../components/ErrorMessage";
+
+import {
+  getLeagueNextEvents,
+  getLeaguePreviousEvents,
+  getLeagueTeams,
+} from "../api/sportsApi";
+
 import { leagueIds } from "../api/leagueIds";
-import { normalizeGame } from "../api/normalizers";
+
+import { normalizeGame, normalizeTeam } from "../api/normalizers";
+
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
-import { getLeagueTeams } from "../api/sportsApi";
-import { normalizeTeam } from "../api/normalizers";
 
 function Home() {
   const { favouriteTeams: favouriteTeamIds } = useFavouriteTeamsContext();
@@ -19,7 +27,7 @@ function Home() {
   const [error, setError] = useState("");
   const [teamsError, setTeamsError] = useState("");
 
-  useEffect(() => {
+  const loadGames = () => {
     setLoading(true);
     setError("");
 
@@ -36,13 +44,14 @@ function Home() {
       })
       .catch((error) => {
         setError(error.message);
+        setGames([]);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
 
-  useEffect(() => {
+  const loadTeams = () => {
     setLoadingTeams(true);
     setTeamsError("");
 
@@ -54,10 +63,16 @@ function Home() {
       })
       .catch((error) => {
         setTeamsError(error.message);
+        setTeams([]);
       })
       .finally(() => {
         setLoadingTeams(false);
       });
+  };
+
+  useEffect(() => {
+    loadGames();
+    loadTeams();
   }, []);
 
   const favouriteTeams = teams.filter((team) =>
@@ -95,16 +110,17 @@ function Home() {
         </div>
       </section>
 
-      {error && <div className="status-message error">{error}</div>}
+      {error && <ErrorMessage message={error} onRetry={loadGames} />}
 
       {loading && <div className="status-message">Loading games...</div>}
 
-      {!loading && !error && (
+      {!loading && (
         <>
           <section className="sports-section">
             <div className="section-heading">
               <div>
                 <h2>My Teams</h2>
+
                 <p>Teams you are following</p>
               </div>
 
@@ -114,7 +130,7 @@ function Home() {
             {loadingTeams ? (
               <div className="status-message">Loading your teams...</div>
             ) : teamsError ? (
-              <div className="status-message error">{teamsError}</div>
+              <ErrorMessage message={teamsError} onRetry={loadTeams} />
             ) : favouriteTeams.length > 0 ? (
               <div className="teams-grid">
                 {favouriteTeams.map((team) => (
@@ -133,7 +149,9 @@ function Home() {
 
                     <div className="team-card-info">
                       <h3>{team.name}</h3>
+
                       <p>{team.league}</p>
+
                       <span>{team.sport}</span>
                     </div>
                   </div>
@@ -151,6 +169,7 @@ function Home() {
             <div className="section-heading">
               <div>
                 <h2>My Team Games</h2>
+
                 <p>Games involving teams you follow</p>
               </div>
 
@@ -182,6 +201,7 @@ function Home() {
             <div className="section-heading">
               <div>
                 <h2>Live Now</h2>
+
                 <p>Games currently in progress</p>
               </div>
 
@@ -191,7 +211,11 @@ function Home() {
             {liveGames.length > 0 ? (
               <div className="games-grid">
                 {liveGames.map((game) => (
-                  <GameCard key={game.id} game={game} />
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    favouriteTeamIds={favouriteTeamIds}
+                  />
                 ))}
               </div>
             ) : (
@@ -203,6 +227,7 @@ function Home() {
             <div className="section-heading">
               <div>
                 <h2>Upcoming</h2>
+
                 <p>Don't miss the next game</p>
               </div>
 
@@ -212,7 +237,11 @@ function Home() {
             {upcomingGames.length > 0 ? (
               <div className="games-grid">
                 {upcomingGames.map((game) => (
-                  <GameCard key={game.id} game={game} />
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    favouriteTeamIds={favouriteTeamIds}
+                  />
                 ))}
               </div>
             ) : (
@@ -224,6 +253,7 @@ function Home() {
             <div className="section-heading">
               <div>
                 <h2>Recent Results</h2>
+
                 <p>Latest completed games</p>
               </div>
 
@@ -233,7 +263,11 @@ function Home() {
             {finishedGames.length > 0 ? (
               <div className="games-grid">
                 {finishedGames.map((game) => (
-                  <GameCard key={game.id} game={game} />
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    favouriteTeamIds={favouriteTeamIds}
+                  />
                 ))}
               </div>
             ) : (
