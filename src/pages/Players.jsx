@@ -149,25 +149,39 @@ function Players() {
           </section>
 
           <section className="player-team-selector">
-            <label htmlFor="team">Select Team</label>
+            <div className="player-selector-header">
+              <div>
+                <p className="eyebrow">SQUAD</p>
+
+                <h2>Select a Team</h2>
+
+                <p>
+                  Choose a Premier League team to explore its current squad.
+                </p>
+              </div>
+            </div>
 
             {loadingTeams ? (
               <LoadingMessage message="Loading teams..." />
             ) : (
-              <select
-                id="team"
-                value={selectedTeamId}
-                onChange={(event) => setSelectedTeamId(event.target.value)}
-                disabled={teamsError}
-              >
-                <option value="">Select a team</option>
+              <div className="player-select-wrapper">
+                <label htmlFor="team">Team</label>
 
-                {teams.map((team) => (
-                  <option key={team.id} value={team.id}>
-                    {team.name}
-                  </option>
-                ))}
-              </select>
+                <select
+                  id="team"
+                  value={selectedTeamId}
+                  onChange={(event) => setSelectedTeamId(event.target.value)}
+                  disabled={teamsError}
+                >
+                  <option value="">Select a team</option>
+
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
 
             {teamsError && (

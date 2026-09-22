@@ -1,6 +1,6 @@
 function PlayerCard({ player, onSelect }) {
   return (
-    <div
+    <article
       className="player-card"
       role="button"
       tabIndex="0"
@@ -11,6 +11,7 @@ function PlayerCard({ player, onSelect }) {
           onSelect(player);
         }
       }}
+      aria-label={`View ${player.name} details`}
     >
       <div className="player-card-header">
         <div className="player-avatar">
@@ -34,7 +35,12 @@ function PlayerCard({ player, onSelect }) {
           <span>{player.nationality}</span>
         </div>
       </div>
-    </div>
+
+      <div className="player-card-footer">
+        <span>View profile</span>
+        <span aria-hidden="true">→</span>
+      </div>
+    </article>
   );
 }
 

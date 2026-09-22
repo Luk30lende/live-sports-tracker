@@ -1143,6 +1143,8 @@ nav a:hover {
 }
 
 .player-card {
+  display: flex;
+  flex-direction: column;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
@@ -1150,11 +1152,13 @@ nav a:hover {
   cursor: pointer;
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .player-card:hover {
   transform: translateY(-3px);
+  border-color: #d1d5db;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
@@ -1218,6 +1222,28 @@ nav a:hover {
   font-size: 12px;
 }
 
+.player-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.player-card-footer span:last-child {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.player-card:hover .player-card-footer span:last-child {
+  transform: translateX(3px);
+}
+
 .player-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1246,6 +1272,67 @@ nav a:hover {
   text-transform: uppercase;
 }
 
+.player-team-selector {
+  margin-bottom: 40px;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.player-selector-header {
+  margin-bottom: 20px;
+}
+
+.player-selector-header .eyebrow {
+  margin-bottom: 8px;
+  color: #6b7280;
+}
+
+.player-selector-header h2 {
+  margin-bottom: 6px;
+  font-size: 22px;
+}
+
+.player-selector-header p:last-child {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.player-select-wrapper {
+  max-width: 420px;
+}
+
+.player-select-wrapper label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.player-select-wrapper select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: white;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.player-select-wrapper select:hover {
+  border-color: #9ca3af;
+}
+
+.player-select-wrapper select:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 /* =========================
    Player Details
 ========================= */
@@ -1255,33 +1342,45 @@ nav a:hover {
 }
 
 .player-details-header {
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
 .back-button {
   border: none;
   background: none;
+  padding: 0;
+  color: #374151;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
 }
 
+.back-button:hover {
+  color: #111827;
+}
+
 .player-profile {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: 28px;
+  margin-bottom: 50px;
+  padding: 30px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
 }
 
 .player-profile-image {
-  width: 120px;
-  height: 120px;
+  width: 128px;
+  height: 128px;
+  flex-shrink: 0;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f1f1f1;
+  color: #374151;
   font-size: 28px;
   font-weight: 700;
 }
@@ -1292,22 +1391,59 @@ nav a:hover {
   object-fit: cover;
 }
 
+.player-profile-info {
+  min-width: 0;
+}
+
+.player-profile-info .eyebrow {
+  margin-bottom: 8px;
+  color: #6b7280;
+}
+
 .player-profile h1 {
   margin: 0 0 8px;
+  font-size: 34px;
+}
+
+.player-position {
+  margin-bottom: 16px;
+  color: #6b7280;
+  font-size: 15px;
 }
 
 .player-profile-meta {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-top: 12px;
 }
 
 .player-profile-meta span {
   padding: 6px 10px;
   border-radius: 6px;
   background: #f1f1f1;
+  color: #374151;
   font-size: 13px;
+}
+
+.player-stats-section {
+  margin-top: 10px;
+}
+
+.player-stats-section .players-list-header {
+  margin-bottom: 24px;
+}
+
+.player-stats-section .players-list-header .eyebrow {
+  margin-bottom: 8px;
+  color: #6b7280;
+}
+
+.player-stats-section .players-list-header h2 {
+  margin-bottom: 6px;
+}
+
+.player-stats-section .players-list-header p:last-child {
+  color: #6b7280;
 }
 
 .player-stats-grid {
@@ -1560,11 +1696,16 @@ a:focus-visible {
   .player-profile {
     align-items: flex-start;
     flex-direction: column;
+    padding: 24px;
   }
 
   .player-profile-image {
     width: 96px;
     height: 96px;
+  }
+
+  .player-profile h1 {
+    font-size: 28px;
   }
 
   .my-teams-header {
