@@ -1,6 +1,8 @@
 function TeamCard({ team, isFavourite, onToggleFavourite }) {
   return (
-    <div className="team-card">
+    <article
+      className={`team-card ${isFavourite ? "favourite-team-card" : ""}`}
+    >
       <div className="team-card-top">
         <div className="team-logo-large">
           {team.badge ? (
@@ -11,8 +13,13 @@ function TeamCard({ team, isFavourite, onToggleFavourite }) {
         </div>
 
         <button
+          type="button"
           className={`favourite-button ${isFavourite ? "favourite" : ""}`}
           onClick={() => onToggleFavourite(team.id)}
+          aria-pressed={isFavourite}
+          aria-label={
+            isFavourite ? `Unfollow ${team.name}` : `Follow ${team.name}`
+          }
         >
           {isFavourite ? "★ Following" : "☆ Follow"}
         </button>
@@ -25,7 +32,7 @@ function TeamCard({ team, isFavourite, onToggleFavourite }) {
 
         <span>{team.sport}</span>
       </div>
-    </div>
+    </article>
   );
 }
 
