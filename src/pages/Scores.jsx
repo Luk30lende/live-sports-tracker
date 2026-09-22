@@ -12,48 +12,78 @@ import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function Scores() {
   const { favouriteTeams } = useFavouriteTeamsContext();
+
   const [filter, setFilter] = useState("ALL");
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
+
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const formatDateForApi = (date) => {
+    const year = date.getFullYear();
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDateLabel = (date) => {
+    const today = new Date();
+
+    const todayStart = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    const yesterdayStart = new Date(todayStart);
+
+    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+
+    const tomorrowStart = new Date(todayStart);
+
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+    const selectedStart = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    );
+
+    if (selectedStart.getTime() === todayStart.getTime()) {
+      return "Today";
+    }
+
+    if (selectedStart.getTime() === yesterdayStart.getTime()) {
+      return "Yesterday";
+    }
+
+    if (selectedStart.getTime() === tomorrowStart.getTime()) {
+      return "Tomorrow";
+    }
+
+    return selectedStart.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
   const loadGames = () => {
     setLoading(true);
     setError("");
 
-    const today = new Date();
+    const date = formatDateForApi(selectedDate);
 
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+    getEventsByDay(date, leagueIds.premierLeague)
+      .then((data) => {
+        const apiGames = (data.events || []).map(normalizeGame);
 
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const formatDate = (date) => {
-      const year = date.getFullYear();
-
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-
-      const day = String(date.getDate()).padStart(2, "0");
-
-      return `${year}-${month}-${day}`;
-    };
-
-    const dates = [
-      formatDate(yesterday),
-      formatDate(today),
-      formatDate(tomorrow),
-    ];
-
-    Promise.all(
-      dates.map((date) => getEventsByDay(date, leagueIds.premierLeague)),
-    )
-      .then((responses) => {
-        const allGames = responses.flatMap((data) =>
-          (data.events || []).map(normalizeGame),
-        );
-
-        setGames(allGames);
+        setGames(apiGames);
       })
       .catch((error) => {
         setError(error.message);
@@ -66,7 +96,31 @@ function Scores() {
 
   useEffect(() => {
     loadGames();
-  }, []);
+  }, [selectedDate]);
+
+  const goToPreviousDay = () => {
+    setSelectedDate((currentDate) => {
+      const previousDate = new Date(currentDate);
+
+      previousDate.setDate(previousDate.getDate() - 1);
+
+      return previousDate;
+    });
+  };
+
+  const goToNextDay = () => {
+    setSelectedDate((currentDate) => {
+      const nextDate = new Date(currentDate);
+
+      nextDate.setDate(nextDate.getDate() + 1);
+
+      return nextDate;
+    });
+  };
+
+  const goToToday = () => {
+    setSelectedDate(new Date());
+  };
 
   const filteredGames = games.filter((game) => {
     if (filter === "ALL") {
@@ -102,69 +156,6 @@ function Scores() {
     return "All Games";
   };
 
-  const formatDateLabel = (date) => {
-    if (!date) {
-      return "Date unavailable";
-    }
-
-    const gameDate = new Date(`${date}T00:00:00`);
-    const today = new Date();
-
-    const todayStart = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
-    );
-
-    const tomorrowStart = new Date(todayStart);
-    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
-
-    const gameDateStart = new Date(
-      gameDate.getFullYear(),
-      gameDate.getMonth(),
-      gameDate.getDate(),
-    );
-
-    if (gameDateStart.getTime() === todayStart.getTime()) {
-      return "Today";
-    }
-
-    if (gameDateStart.getTime() === tomorrowStart.getTime()) {
-      return "Tomorrow";
-    }
-
-    return gameDate.toLocaleDateString("en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
-  const groupedGames = filteredGames.reduce((groups, game) => {
-    const date = game.date || "unknown";
-
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-
-    groups[date].push(game);
-
-    return groups;
-  }, {});
-
-  const sortedGroups = Object.entries(groupedGames).sort(([dateA], [dateB]) => {
-    if (dateA === "unknown") {
-      return 1;
-    }
-
-    if (dateB === "unknown") {
-      return -1;
-    }
-
-    return new Date(dateA) - new Date(dateB);
-  });
-
   return (
     <main className="scores-page">
       <section className="scores-header">
@@ -176,6 +167,48 @@ function Scores() {
           <p>Follow live action, upcoming fixtures and completed games.</p>
         </div>
       </section>
+
+      {/* Date Navigation */}
+
+      <div className="score-date-navigation">
+        <button
+          type="button"
+          className="date-navigation-button"
+          onClick={goToPreviousDay}
+          aria-label="Previous day"
+        >
+          ← Previous
+        </button>
+
+        <div className="selected-date">
+          <span>{formatDateLabel(selectedDate)}</span>
+
+          <strong>
+            {selectedDate.toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </strong>
+        </div>
+
+        <button
+          type="button"
+          className="date-navigation-button"
+          onClick={goToNextDay}
+          aria-label="Next day"
+        >
+          Next →
+        </button>
+      </div>
+
+      <div className="today-button-wrapper">
+        <button type="button" className="today-button" onClick={goToToday}>
+          Today
+        </button>
+      </div>
+
+      {/* Filters */}
 
       <div className="score-filters">
         <button
@@ -216,9 +249,20 @@ function Scores() {
 
       <section className="scores-list">
         <div className="scores-list-header">
-          <h2>{getTitle()}</h2>
+          <div>
+            <h2>{getTitle()}</h2>
 
-          {!loading && !error && <span>{filteredGames.length} games</span>}
+            <p className="scores-selected-date">
+              {formatDateLabel(selectedDate)}
+            </p>
+          </div>
+
+          {!loading && !error && (
+            <span>
+              {filteredGames.length}{" "}
+              {filteredGames.length === 1 ? "game" : "games"}
+            </span>
+          )}
         </div>
 
         {loading && <LoadingMessage message="Loading games..." />}
@@ -230,40 +274,46 @@ function Scores() {
             {filter === "MY_TEAMS" && favouriteTeams.length === 0 ? (
               <>
                 <h3>No teams followed yet</h3>
+
                 <p>
                   Follow a team from the Teams page to see their games here.
                 </p>
               </>
             ) : (
-              "No games found."
+              <>
+                <h3>No games found</h3>
+
+                <p>
+                  There are no games matching this filter on{" "}
+                  {formatDateLabel(selectedDate).toLowerCase()}.
+                </p>
+              </>
             )}
           </div>
         )}
 
         {!loading && !error && filteredGames.length > 0 && (
           <div className="scores-groups">
-            {sortedGroups.map(([date, dateGames]) => (
-              <section className="score-date-group" key={date}>
-                <div className="score-date-header">
-                  <h3>{formatDateLabel(date)}</h3>
+            <section className="score-date-group">
+              <div className="score-date-header">
+                <h3>{formatDateLabel(selectedDate)}</h3>
 
-                  <span>
-                    {dateGames.length}{" "}
-                    {dateGames.length === 1 ? "game" : "games"}
-                  </span>
-                </div>
+                <span>
+                  {filteredGames.length}{" "}
+                  {filteredGames.length === 1 ? "game" : "games"}
+                </span>
+              </div>
 
-                <div className="games-grid">
-                  {dateGames.map((game) => (
-                    <GameCard
-                      key={game.id}
-                      game={game}
-                      favouriteTeamIds={favouriteTeams}
-                    />
-                  ))}
-                </div>
-              </section>
-            ))}
+              <div className="games-grid">
+                {filteredGames.map((game) => (
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    favouriteTeamIds={favouriteTeams}
+                  />
+                ))}
+              </div>
+            </section>
           </div>
         )}
       </section>
