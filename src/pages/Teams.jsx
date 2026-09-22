@@ -90,7 +90,7 @@ function Teams() {
           <span>{filteredTeams.length} teams</span>
         </div>
 
-        {!loading && !error && (
+        {!loading && !error && filteredTeams.length > 0 && (
           <div className="teams-grid">
             {filteredTeams.map((team) => (
               <TeamCard
@@ -100,6 +100,28 @@ function Teams() {
                 onToggleFavourite={toggleFavourite}
               />
             ))}
+          </div>
+        )}
+
+        {!loading && !error && filteredTeams.length === 0 && (
+          <div className="status-message teams-empty-state">
+            <div className="empty-state-icon" aria-hidden="true">
+              —
+            </div>
+
+            <h3>No teams found</h3>
+
+            <p>There are currently no teams available for this selection.</p>
+
+            {sportFilter !== "ALL" && (
+              <button
+                type="button"
+                className="empty-state-action empty-state-button"
+                onClick={() => setSportFilter("ALL")}
+              >
+                View All Teams
+              </button>
+            )}
           </div>
         )}
       </section>

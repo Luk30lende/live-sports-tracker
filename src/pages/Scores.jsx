@@ -294,23 +294,44 @@ function Scores() {
         {error && <ErrorMessage message={error} onRetry={loadGames} />}
 
         {!loading && !error && filteredGames.length === 0 && (
-          <div className="status-message">
+          <div className="status-message scores-empty-state">
             {filter === "MY_TEAMS" && favouriteTeams.length === 0 ? (
               <>
+                <div className="empty-state-icon" aria-hidden="true">
+                  ☆
+                </div>
+
                 <h3>No teams followed yet</h3>
 
-                <p>
-                  Follow a team from the Teams page to see their games here.
-                </p>
+                <p>Follow your favourite teams to see their games here.</p>
+
+                <a href="/teams" className="empty-state-action">
+                  Find Teams
+                </a>
               </>
             ) : (
               <>
+                <div className="empty-state-icon" aria-hidden="true">
+                  —
+                </div>
+
                 <h3>No games found</h3>
 
                 <p>
-                  There are no games matching this filter on{" "}
+                  There are no{" "}
+                  {filter === "ALL" ? "games" : getTitle().toLowerCase()} on{" "}
                   {formatDateLabel(selectedDate).toLowerCase()}.
                 </p>
+
+                {filter !== "ALL" && (
+                  <button
+                    type="button"
+                    className="empty-state-action empty-state-button"
+                    onClick={() => setFilter("ALL")}
+                  >
+                    View All Games
+                  </button>
+                )}
               </>
             )}
           </div>

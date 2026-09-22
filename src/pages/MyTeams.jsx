@@ -63,7 +63,9 @@ function MyTeams() {
       {!loading && !teamsError && myTeams.length === 0 && (
         <section className="my-teams-empty">
           <div className="status-message">
-            <div className="empty-state-icon">☆</div>
+            <div className="empty-state-icon" aria-hidden="true">
+              ☆
+            </div>
 
             <h2>No teams yet</h2>
 

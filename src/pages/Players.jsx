@@ -229,8 +229,17 @@ function Players() {
             !playersError &&
             selectedTeam &&
             players.length === 0 && (
-              <div className="status-message">
-                No players found for this team.
+              <div className="status-message players-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">
+                  —
+                </div>
+
+                <h3>No players found</h3>
+
+                <p>
+                  There is currently no squad information available for{" "}
+                  {selectedTeam.name}.
+                </p>
               </div>
             )}
         </>

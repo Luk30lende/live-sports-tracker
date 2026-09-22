@@ -158,9 +158,20 @@ function Home() {
                 ))}
               </div>
             ) : (
-              <div className="status-message">
-                You are not following any teams yet. Visit the Teams page to
-                follow your favourites.
+              <div className="status-message home-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">
+                  ☆
+                </div>
+
+                <h3>No teams followed yet</h3>
+
+                <p>
+                  Follow your favourite teams to see them on your dashboard.
+                </p>
+
+                <a href="/teams" className="empty-state-action">
+                  Find Teams
+                </a>
               </div>
             )}
           </section>
@@ -177,8 +188,20 @@ function Home() {
             </div>
 
             {favouriteTeamIds.length === 0 ? (
-              <div className="status-message">
-                Follow a team to see their games here.
+              <div className="status-message home-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">
+                  —
+                </div>
+
+                <h3>No team games yet</h3>
+
+                <p>
+                  Follow a team to see their upcoming and completed games here.
+                </p>
+
+                <a href="/teams" className="empty-state-action">
+                  Find Teams
+                </a>
               </div>
             ) : myTeamGames.length > 0 ? (
               <div className="games-grid">
@@ -219,7 +242,15 @@ function Home() {
                 ))}
               </div>
             ) : (
-              <div className="status-message">No live games right now.</div>
+              <div className="status-message home-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">
+                  ●
+                </div>
+
+                <h3>No live games right now</h3>
+
+                <p>There are no games currently in progress.</p>
+              </div>
             )}
           </section>
 
@@ -245,7 +276,15 @@ function Home() {
                 ))}
               </div>
             ) : (
-              <div className="status-message">No upcoming games found.</div>
+              <div className="status-message home-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">
+                  →
+                </div>
+
+                <h3>No upcoming games</h3>
+
+                <p>There are no upcoming fixtures available right now.</p>
+              </div>
             )}
           </section>
 
@@ -271,7 +310,15 @@ function Home() {
                 ))}
               </div>
             ) : (
-              <div className="status-message">No recent results found.</div>
+              <div className="status-message home-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">
+                  ✓
+                </div>
+
+                <h3>No recent results</h3>
+
+                <p>There are no completed games available right now.</p>
+              </div>
             )}
           </section>
         </>

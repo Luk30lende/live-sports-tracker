@@ -57,10 +57,16 @@ function PlayerDetails({ player, stats, loading, error, onClose, onRetry }) {
         {error && <ErrorMessage message={error} onRetry={onRetry} />}
 
         {!loading && !error && stats.length === 0 && (
-          <div className="status-message">
+          <div className="status-message player-stats-empty-state">
+            <div className="empty-state-icon" aria-hidden="true">
+              —
+            </div>
+
             <h3>No statistics available</h3>
 
-            <p>There are currently no statistics available for this player.</p>
+            <p>
+              There are currently no statistics available for {player.name}.
+            </p>
           </div>
         )}
 
