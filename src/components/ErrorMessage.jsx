@@ -1,11 +1,21 @@
 function ErrorMessage({ message, onRetry }) {
   return (
     <div className="error-message" role="alert">
-      <strong>Something went wrong.</strong>
+      <div className="error-icon" aria-hidden="true">
+        !
+      </div>
 
-      <p>{message}</p>
+      <div className="error-content">
+        <strong>Something went wrong</strong>
 
-      {onRetry && <button onClick={onRetry}>Try Again</button>}
+        <p>{message}</p>
+
+        {onRetry && (
+          <button type="button" onClick={onRetry}>
+            Try Again
+          </button>
+        )}
+      </div>
     </div>
   );
 }
