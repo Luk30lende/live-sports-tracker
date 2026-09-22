@@ -156,6 +156,26 @@ function Scores() {
     return "All Games";
   };
 
+  const getFilterDescription = () => {
+    if (filter === "LIVE") {
+      return "Games currently in progress";
+    }
+
+    if (filter === "UPCOMING") {
+      return "Scheduled games that have not started";
+    }
+
+    if (filter === "FINISHED") {
+      return "Games that have already been completed";
+    }
+
+    if (filter === "MY_TEAMS") {
+      return "Games involving teams you follow";
+    }
+
+    return "All games scheduled for this date";
+  };
+
   return (
     <main className="scores-page">
       <section className="scores-header">
@@ -252,13 +272,17 @@ function Scores() {
           <div>
             <h2>{getTitle()}</h2>
 
+            <p className="scores-filter-description">
+              {getFilterDescription()}
+            </p>
+
             <p className="scores-selected-date">
               {formatDateLabel(selectedDate)}
             </p>
           </div>
 
           {!loading && !error && (
-            <span>
+            <span className="scores-result-count">
               {filteredGames.length}{" "}
               {filteredGames.length === 1 ? "game" : "games"}
             </span>

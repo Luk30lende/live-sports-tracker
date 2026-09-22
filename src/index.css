@@ -441,30 +441,47 @@ nav a:hover {
 
 .score-filters {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 40px;
   flex-wrap: wrap;
+  padding: 6px;
+  background: #eef0f3;
+  border-radius: 12px;
+  width: fit-content;
 }
 
 .score-filters button {
-  border: 1px solid #d1d5db;
-  background: white;
-  color: #374151;
-  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  padding: 9px 15px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .score-filters button:hover {
-  background: #f3f4f6;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .score-filters button.active {
-  background: #111827;
-  color: white;
-  border-color: #111827;
+  background: white;
+  color: #111827;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.score-filters button.active:first-child {
+  color: #111827;
+}
+
+.score-filters button:nth-child(3).active {
+  color: #dc2626;
 }
 
 .scores-list {
@@ -516,6 +533,24 @@ nav a:hover {
 .score-date-header span {
   font-size: 13px;
   opacity: 0.65;
+}
+
+.scores-filter-description {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.scores-selected-date {
+  margin-top: 6px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.scores-result-count {
+  color: #6b7280;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 /* =========================
@@ -1429,6 +1464,26 @@ a:focus-visible {
   }
 
   .date-navigation-button {
+    width: 100%;
+  }
+
+  .score-filters {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .score-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .score-filters button {
+    flex-shrink: 0;
+  }
+
+  .scores-result-count {
     width: 100%;
   }
 }
