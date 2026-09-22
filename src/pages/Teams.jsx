@@ -55,7 +55,12 @@ function Teams() {
           </p>
         </div>
 
-        <div className="favourite-count">{favouriteTeams.length} Following</div>
+        <div className="favourite-count">
+          <strong>{favouriteTeams.length}</strong>
+          <span>
+            {favouriteTeams.length === 1 ? "Team Following" : "Teams Following"}
+          </span>
+        </div>
       </section>
 
       <div className="team-filters">

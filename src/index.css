@@ -662,13 +662,24 @@ nav a:hover {
 }
 
 .favourite-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: #111827;
   color: white;
   padding: 10px 16px;
   border-radius: 20px;
-  font-size: 13px;
-  font-weight: bold;
   white-space: nowrap;
+}
+
+.favourite-count strong {
+  font-size: 15px;
+}
+
+.favourite-count span {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.85;
 }
 
 .team-filters {
@@ -711,17 +722,24 @@ nav a:hover {
 .teams-list-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
 .teams-list-header h2 {
   font-size: 24px;
+  margin-bottom: 4px;
 }
 
 .teams-list-header span {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.teams-list {
+  margin-top: 8px;
 }
 
 .teams-grid {
@@ -1470,6 +1488,10 @@ a:focus-visible {
 
   .teams-header {
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .teams-list-header {
     align-items: flex-start;
   }
 
