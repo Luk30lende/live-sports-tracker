@@ -63,12 +63,18 @@ function MyTeams() {
       {!loading && !teamsError && myTeams.length === 0 && (
         <section className="my-teams-empty">
           <div className="status-message">
+            <div className="empty-state-icon">☆</div>
+
             <h2>No teams yet</h2>
 
             <p>
-              You are not following any teams. Visit the Teams page to find
-              teams you want to follow.
+              You are not following any teams yet. Find teams you support and
+              follow them to see them here.
             </p>
+
+            <a href="/teams" className="empty-state-action">
+              Find Teams
+            </a>
           </div>
         </section>
       )}
@@ -77,17 +83,20 @@ function MyTeams() {
         <section className="my-teams-list">
           <div className="my-teams-list-header">
             <div>
+              <p className="eyebrow">YOUR FAVOURITES</p>
+
               <h2>Following</h2>
 
               <p>
-                {myTeams.length} {myTeams.length === 1 ? "team" : "teams"}
+                {myTeams.length} {myTeams.length === 1 ? "team" : "teams"}{" "}
+                currently in your list
               </p>
             </div>
           </div>
 
           <div className="teams-grid">
             {myTeams.map((team) => (
-              <div className="team-card" key={team.id}>
+              <div className="team-card favourite-team-card" key={team.id}>
                 <div className="team-card-top">
                   <div className="team-logo-large">
                     {team.badge ? (
@@ -98,8 +107,11 @@ function MyTeams() {
                   </div>
 
                   <button
+                    type="button"
                     className="favourite-button favourite"
                     onClick={() => toggleFavourite(team.id)}
+                    aria-pressed="true"
+                    aria-label={`Unfollow ${team.name}`}
                   >
                     ★ Following
                   </button>

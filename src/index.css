@@ -1368,25 +1368,71 @@ nav a:hover {
   margin-bottom: 24px;
 }
 
-.my-teams-list-header h2 {
-  margin-bottom: 6px;
+.my-teams-list-header .eyebrow {
+  margin-bottom: 8px;
+  color: #6b7280;
 }
 
-.my-teams-list-header p {
+.my-teams-list-header h2 {
+  margin-bottom: 6px;
+  font-size: 26px;
+}
+
+.my-teams-list-header > div > p:last-child {
   margin: 0;
-  opacity: 0.7;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .my-teams-empty {
-  max-width: 600px;
+  max-width: 620px;
+}
+
+.my-teams-empty .status-message {
+  padding: 50px 30px;
+}
+
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 28px;
 }
 
 .my-teams-empty h2 {
   margin-bottom: 8px;
+  color: #111827;
 }
 
 .my-teams-empty p {
-  margin: 0;
+  max-width: 450px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+
+.empty-state-action {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #111827;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.empty-state-action:hover {
+  background: #374151;
+  transform: translateY(-1px);
 }
 
 /* =========================
