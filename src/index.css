@@ -673,30 +673,39 @@ nav a:hover {
 
 .team-filters {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 40px;
   flex-wrap: wrap;
+  padding: 6px;
+  background: #eef0f3;
+  border-radius: 12px;
+  width: fit-content;
 }
 
 .team-filters button {
-  border: 1px solid #d1d5db;
-  background: white;
-  color: #374151;
-  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  padding: 9px 15px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .team-filters button:hover {
-  background: #f3f4f6;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .team-filters button.active {
-  background: #111827;
-  color: white;
-  border-color: #111827;
+  background: white;
+  color: #111827;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .teams-list-header {
@@ -1532,6 +1541,22 @@ a:focus-visible {
 
   .scores-result-count {
     width: 100%;
+  }
+
+  .team-filters {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .team-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .team-filters button {
+    flex-shrink: 0;
   }
 }
 
