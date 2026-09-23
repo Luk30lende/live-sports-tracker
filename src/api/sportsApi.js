@@ -53,3 +53,7 @@ export function getLeagueTeams(leagueName) {
 export function getEventsByDay(date, leagueId) {
   return request(`eventsday.php?d=${date}&l=${leagueId}`);
 }
+
+export function getPlayer(playerId) {
+  return request(`lookupplayer.php?id=${playerId}`);
+}

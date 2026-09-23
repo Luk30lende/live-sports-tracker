@@ -210,7 +210,11 @@ function TeamDetails() {
         {players.length > 0 ? (
           <div className="team-squad-grid">
             {players.map((player) => (
-              <article className="team-squad-card" key={player.id}>
+              <Link
+                to={`/players/${player.id}`}
+                className="team-squad-card"
+                key={player.id}
+              >
                 <div className="team-squad-avatar">
                   {player.image ? (
                     <img src={player.image} alt={player.name} />
@@ -226,7 +230,7 @@ function TeamDetails() {
 
                   <span>{player.nationality}</span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         ) : (

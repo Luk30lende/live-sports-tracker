@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import PlayerCard from "../components/PlayerCard";
 import PlayerDetails from "../components/PlayerDetails";
@@ -8,6 +9,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import {
   getLeagueTeams,
   getTeamPlayers,
+  getPlayer,
   getPlayerStats,
 } from "../api/sportsApi";
 
@@ -18,6 +20,8 @@ import {
 } from "../api/normalizers";
 
 function Players() {
+  const { playerId } = useParams();
+
   const [teams, setTeams] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [players, setPlayers] = useState([]);
@@ -45,10 +49,12 @@ function Players() {
 
         setTeams(apiTeams);
 
-        const arsenal = apiTeams.find((team) => team.name === "Arsenal");
+        if (!playerId) {
+          const arsenal = apiTeams.find((team) => team.name === "Arsenal");
 
-        if (arsenal) {
-          setSelectedTeamId(arsenal.id);
+          if (arsenal) {
+            setSelectedTeamId(arsenal.id);
+          }
         }
       })
       .catch((error) => {
@@ -105,6 +111,28 @@ function Players() {
       });
   };
 
+  const openPlayerFromUrl = (id) => {
+    if (!id) {
+      return;
+    }
+
+    getPlayer(id)
+      .then((data) => {
+        const playerResult = data.players?.[0];
+
+        if (!playerResult) {
+          throw new Error("Player not found.");
+        }
+
+        const player = normalizePlayer(playerResult);
+
+        loadPlayerStats(player);
+      })
+      .catch((error) => {
+        setStatsError(error.message);
+      });
+  };
+
   const handlePlayerSelect = (player) => {
     loadPlayerStats(player);
   };
@@ -116,6 +144,10 @@ function Players() {
   useEffect(() => {
     loadPlayers(selectedTeamId);
   }, [selectedTeamId]);
+
+  useEffect(() => {
+    openPlayerFromUrl(playerId);
+  }, [playerId]);
 
   const selectedTeam = teams.find((team) => team.id === selectedTeamId);
 

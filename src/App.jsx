@@ -25,6 +25,7 @@ function App() {
           <Route path="/my-teams" element={<MyTeams />} />
           <Route path="/standings" element={<Standings />} />
           <Route path="/players" element={<Players />} />
+          <Route path="/players/:playerId" element={<Players />} />
         </Routes>
       </BrowserRouter>
     </FavouriteTeamsProvider>
