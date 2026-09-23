@@ -4,15 +4,25 @@ import { Link } from "react-router-dom";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 
-import { getLeagueTeams } from "../api/sportsApi";
-import { normalizeTeam } from "../api/normalizers";
+import {
+  getLeagueTeams,
+  getTeamNextEvents,
+  getTeamPreviousEvents,
+} from "../api/sportsApi";
+
+import { normalizeTeam, normalizeGame } from "../api/normalizers";
 
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
+
+import TeamGameSummary from "../components/TeamGameSummary";
 
 function MyTeams() {
   const { favouriteTeams, toggleFavourite } = useFavouriteTeamsContext();
 
   const [teams, setTeams] = useState([]);
+  const [teamGames, setTeamGames] = useState({});
+  const [gamesLoading, setGamesLoading] = useState(false);
+  const [gamesError, setGamesError] = useState("");
   const [loading, setLoading] = useState(true);
   const [teamsError, setTeamsError] = useState("");
 
@@ -25,6 +35,12 @@ function MyTeams() {
         const apiTeams = (data.teams || []).map(normalizeTeam);
 
         setTeams(apiTeams);
+
+        const followedTeams = apiTeams.filter((team) =>
+          favouriteTeams.includes(team.id),
+        );
+
+        loadTeamGames(followedTeams);
       })
       .catch((error) => {
         setTeamsError(error.message);
@@ -35,9 +51,69 @@ function MyTeams() {
       });
   };
 
+  const loadTeamGames = (teamList) => {
+    if (teamList.length === 0) {
+      setTeamGames({});
+      return;
+    }
+
+    setGamesLoading(true);
+    setGamesError("");
+
+    const requests = teamList.map((team) =>
+      Promise.all([
+        getTeamNextEvents(team.id),
+        getTeamPreviousEvents(team.id),
+      ]).then(([nextData, previousData]) => {
+        const upcomingGames = (nextData.events || []).map(normalizeGame);
+
+        const recentGames = (previousData.results || []).map(normalizeGame);
+
+        return {
+          teamId: team.id,
+          upcomingGame: upcomingGames[0] || null,
+          recentGame: recentGames[0] || null,
+        };
+      }),
+    );
+
+    Promise.all(requests)
+      .then((results) => {
+        const gamesByTeam = {};
+
+        results.forEach((result) => {
+          gamesByTeam[result.teamId] = {
+            upcomingGame: result.upcomingGame,
+            recentGame: result.recentGame,
+          };
+        });
+
+        setTeamGames(gamesByTeam);
+      })
+      .catch((error) => {
+        setGamesError(error.message);
+        setTeamGames({});
+      })
+      .finally(() => {
+        setGamesLoading(false);
+      });
+  };
+
   useEffect(() => {
     loadTeams();
   }, []);
+
+  useEffect(() => {
+    if (teams.length === 0) {
+      return;
+    }
+
+    const followedTeams = teams.filter((team) =>
+      favouriteTeams.includes(team.id),
+    );
+
+    loadTeamGames(followedTeams);
+  }, [favouriteTeams]);
 
   const myTeams = teams.filter((team) => favouriteTeams.includes(team.id));
 
@@ -141,6 +217,48 @@ function MyTeams() {
               </div>
             ))}
           </div>
+
+          <section className="my-teams-games">
+            <div className="my-teams-list-header">
+              <div>
+                <p className="eyebrow">TEAM ACTIVITY</p>
+
+                <h2>Games</h2>
+
+                <p>
+                  Upcoming games and recent results for the teams you follow.
+                </p>
+              </div>
+            </div>
+
+            {gamesLoading && <LoadingMessage message="Loading team games..." />}
+
+            {gamesError && (
+              <ErrorMessage
+                message={gamesError}
+                onRetry={() => {
+                  const followedTeams = teams.filter((team) =>
+                    favouriteTeams.includes(team.id),
+                  );
+
+                  loadTeamGames(followedTeams);
+                }}
+              />
+            )}
+
+            {!gamesLoading && !gamesError && (
+              <div className="my-teams-games-list">
+                {myTeams.map((team) => (
+                  <TeamGameSummary
+                    key={team.id}
+                    team={team}
+                    upcomingGame={teamGames[team.id]?.upcomingGame || null}
+                    recentGame={teamGames[team.id]?.recentGame || null}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
         </section>
       )}
     </main>

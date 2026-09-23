@@ -1805,6 +1805,16 @@ nav a:hover {
   padding: 50px 30px;
 }
 
+.my-teams-games {
+  margin-top: 50px;
+}
+
+.my-teams-games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .empty-state-icon {
   width: 56px;
   height: 56px;
@@ -1916,6 +1926,94 @@ nav a:hover {
 .team-squad-info span {
   color: #9ca3af;
   font-size: 12px;
+}
+
+.team-game-summary {
+  padding: 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.team-game-summary-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.team-game-summary-header h3 {
+  margin-bottom: 4px;
+  font-size: 17px;
+}
+
+.team-game-summary-header span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.team-game-summary-link {
+  color: #374151;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.team-game-summary-link:hover {
+  color: #111827;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.team-game-summary-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.team-game-summary-item {
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.team-game-summary-label {
+  display: block;
+  margin-bottom: 12px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.team-game-summary-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.team-game-summary-item strong {
+  font-size: 14px;
+}
+
+.team-game-summary-vs,
+.team-game-summary-date {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.team-game-summary-score {
+  color: #111827;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.team-game-summary-item p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
 }
 
 /* =========================
@@ -2147,6 +2245,15 @@ a:focus-visible {
   .team-details-section-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .team-game-summary-content {
+    grid-template-columns: 1fr;
+  }
+
+  .team-game-summary-header {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
