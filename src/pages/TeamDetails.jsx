@@ -8,9 +8,14 @@ import {
   getTeam,
   getTeamNextEvents,
   getTeamPreviousEvents,
+  getTeamPlayers,
 } from "../api/sportsApi";
 
-import { normalizeTeam, normalizeGame } from "../api/normalizers";
+import {
+  normalizeTeam,
+  normalizeGame,
+  normalizePlayer,
+} from "../api/normalizers";
 
 function TeamDetails() {
   const { teamId } = useParams();
@@ -18,6 +23,8 @@ function TeamDetails() {
   const [team, setTeam] = useState(null);
   const [upcomingGames, setUpcomingGames] = useState([]);
   const [recentGames, setRecentGames] = useState([]);
+
+  const [players, setPlayers] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -30,8 +37,9 @@ function TeamDetails() {
       getTeam(teamId),
       getTeamNextEvents(teamId),
       getTeamPreviousEvents(teamId),
+      getTeamPlayers(teamId),
     ])
-      .then(([teamData, nextData, previousData]) => {
+      .then(([teamData, nextData, previousData, playersData]) => {
         const teamResult = teamData.teams?.[0];
 
         if (!teamResult) {
@@ -43,12 +51,15 @@ function TeamDetails() {
         setUpcomingGames((nextData.events || []).map(normalizeGame));
 
         setRecentGames((previousData.results || []).map(normalizeGame));
+
+        setPlayers((playersData.player || []).map(normalizePlayer));
       })
       .catch((error) => {
         setError(error.message);
         setTeam(null);
         setUpcomingGames([]);
         setRecentGames([]);
+        setPlayers([]);
       })
       .finally(() => {
         setLoading(false);
@@ -178,6 +189,53 @@ function TeamDetails() {
 
             <p>
               There are currently no recent results available for {team.name}.
+            </p>
+          </div>
+        )}
+      </section>
+
+      <section className="team-details-section">
+        <div className="team-details-section-header">
+          <div>
+            <p className="eyebrow">SQUAD</p>
+
+            <h2>Players</h2>
+          </div>
+
+          <span>
+            {players.length} {players.length === 1 ? "player" : "players"}
+          </span>
+        </div>
+
+        {players.length > 0 ? (
+          <div className="team-squad-grid">
+            {players.map((player) => (
+              <article className="team-squad-card" key={player.id}>
+                <div className="team-squad-avatar">
+                  {player.image ? (
+                    <img src={player.image} alt={player.name} />
+                  ) : (
+                    player.shortName
+                  )}
+                </div>
+
+                <div className="team-squad-info">
+                  <h3>{player.name}</h3>
+
+                  <p>{player.position}</p>
+
+                  <span>{player.nationality}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="status-message">
+            <h3>No squad information</h3>
+
+            <p>
+              There is currently no player information available for {team.name}
+              .
             </p>
           </div>
         )}

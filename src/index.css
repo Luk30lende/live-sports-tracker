@@ -1828,6 +1828,64 @@ nav a:hover {
   transform: translateY(-1px);
 }
 
+.team-squad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.team-squad-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+}
+
+.team-squad-avatar {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.team-squad-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-squad-info {
+  min-width: 0;
+}
+
+.team-squad-info h3 {
+  margin-bottom: 4px;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.team-squad-info p {
+  margin-bottom: 5px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.team-squad-info span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
 /* =========================
    Focus States
 ========================= */
