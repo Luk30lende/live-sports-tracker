@@ -1241,16 +1241,31 @@ nav a:hover {
 }
 
 .standing-team-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #e5e7eb;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
+}
+
+.standing-team-logo img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
+
+.standings-team-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.standings-team-link:hover {
   color: #374151;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .points {

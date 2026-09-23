@@ -54,6 +54,7 @@ export function normalizeTeam(team) {
 
 export function normalizeStanding(team) {
   return {
+    id: team.idTeam,
     position: Number(team.intRank),
     team: team.strTeam,
     played: Number(team.intPlayed),

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function StandingsTable({ teams }) {
   return (
     <div className="standings-table-wrapper">
@@ -21,9 +23,20 @@ function StandingsTable({ teams }) {
               <td className="position">{team.position}</td>
 
               <td className="standing-team">
-                <div className="standing-team-logo">{team.team.charAt(0)}</div>
+                <div className="standing-team-logo">
+                  {team.badge && (
+                    <img src={team.badge} alt={`${team.team} badge`} />
+                  )}
+                </div>
 
-                <span>{team.team}</span>
+                <td>
+                  <Link
+                    to={`/teams/${team.id}`}
+                    className="standings-team-link"
+                  >
+                    {team.team}
+                  </Link>
+                </td>
               </td>
 
               <td>{team.played}</td>
