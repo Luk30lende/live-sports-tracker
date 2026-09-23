@@ -26,6 +26,18 @@ export function getTeamPlayers(teamId) {
   return request(`lookup_all_players.php?id=${teamId}`);
 }
 
+export function getTeam(teamId) {
+  return request(`lookupteam.php?id=${teamId}`);
+}
+
+export function getTeamNextEvents(teamId) {
+  return request(`eventsnext.php?id=${teamId}`);
+}
+
+export function getTeamPreviousEvents(teamId) {
+  return request(`eventslast.php?id=${teamId}`);
+}
+
 export function getPlayerStats(playerId) {
   return request(`lookupplayerstats.php?id=${playerId}`);
 }
