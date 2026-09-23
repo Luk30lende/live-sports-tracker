@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
@@ -100,13 +101,19 @@ function MyTeams() {
             {myTeams.map((team) => (
               <div className="team-card favourite-team-card" key={team.id}>
                 <div className="team-card-top">
-                  <div className="team-logo-large">
-                    {team.badge ? (
-                      <img src={team.badge} alt={`${team.name} badge`} />
-                    ) : (
-                      team.shortName
-                    )}
-                  </div>
+                  <Link
+                    to={`/teams/${team.id}`}
+                    className="team-card-link"
+                    aria-label={`View ${team.name} details`}
+                  >
+                    <div className="team-logo-large">
+                      {team.badge ? (
+                        <img src={team.badge} alt={`${team.name} badge`} />
+                      ) : (
+                        team.shortName
+                      )}
+                    </div>
+                  </Link>
 
                   <button
                     type="button"
@@ -120,7 +127,12 @@ function MyTeams() {
                 </div>
 
                 <div className="team-card-info">
-                  <h3>{team.name}</h3>
+                  <Link
+                    to={`/teams/${team.id}`}
+                    className="team-card-name-link"
+                  >
+                    <h3>{team.name}</h3>
+                  </Link>
 
                   <p>{team.league}</p>
 
