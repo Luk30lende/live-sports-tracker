@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import GameCard from "../components/GameCard";
 import LoadingMessage from "../components/LoadingMessage";
@@ -11,6 +12,10 @@ import { normalizeGame } from "../api/normalizers";
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function Scores() {
+  const [searchParams] = useSearchParams();
+
+  const teamId = searchParams.get("team");
+
   const { favouriteTeams } = useFavouriteTeamsContext();
 
   const [filter, setFilter] = useState("ALL");
@@ -123,13 +128,23 @@ function Scores() {
   };
 
   const filteredGames = games.filter((game) => {
+    if (
+      teamId &&
+      String(game.homeTeamId) !== String(teamId) &&
+      String(game.awayTeamId) !== String(teamId)
+    ) {
+      return false;
+    }
+
     if (filter === "ALL") {
       return true;
     }
 
     if (filter === "MY_TEAMS") {
       return favouriteTeams.some(
-        (teamId) => teamId === game.homeTeamId || teamId === game.awayTeamId,
+        (favouriteTeamId) =>
+          favouriteTeamId === game.homeTeamId ||
+          favouriteTeamId === game.awayTeamId,
       );
     }
 

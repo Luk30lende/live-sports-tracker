@@ -129,6 +129,13 @@ function TeamDetails() {
             {upcomingGames.length}{" "}
             {upcomingGames.length === 1 ? "game" : "games"}
           </span>
+
+          <Link
+            to={`/scores?team=${team.id}`}
+            className="team-details-view-link"
+          >
+            View all games →
+          </Link>
         </div>
 
         {upcomingGames.length > 0 ? (
@@ -167,6 +174,13 @@ function TeamDetails() {
           <span>
             {recentGames.length} {recentGames.length === 1 ? "game" : "games"}
           </span>
+
+          <Link
+            to={`/scores?team=${team.id}`}
+            className="team-details-view-link"
+          >
+            View all games →
+          </Link>
         </div>
 
         {recentGames.length > 0 ? (

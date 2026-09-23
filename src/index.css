@@ -1087,6 +1087,26 @@ nav a:hover {
   white-space: nowrap;
 }
 
+.team-details-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.team-details-view-link {
+  color: #374151;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.team-details-view-link:hover {
+  color: #111827;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* =========================
    Standings Page
 ========================= */
@@ -2122,6 +2142,11 @@ a:focus-visible {
   .team-details-game {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .team-details-section-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
