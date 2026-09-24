@@ -57,3 +57,7 @@ export function getEventsByDay(date, leagueId) {
 export function getPlayer(playerId) {
   return request(`lookupplayer.php?id=${playerId}`);
 }
+
+export function getEvent(eventId) {
+  return request(`lookupevent.php?id=${eventId}`);
+}

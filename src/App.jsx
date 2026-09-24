@@ -8,6 +8,7 @@ import Standings from "./pages/Standings";
 import Players from "./pages/Players";
 import MyTeams from "./pages/MyTeams";
 import TeamDetails from "./pages/TeamDetails";
+import GameDetails from "./pages/GameDetails";
 
 import { FavouriteTeamsProvider } from "./context/FavouriteTeamsContext";
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/standings" element={<Standings />} />
           <Route path="/players" element={<Players />} />
           <Route path="/players/:playerId" element={<Players />} />
+          <Route path="/games/:gameId" element={<GameDetails />} />
         </Routes>
       </BrowserRouter>
     </FavouriteTeamsProvider>
