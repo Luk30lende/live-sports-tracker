@@ -1478,6 +1478,18 @@ nav a:hover {
   font-size: 12px;
 }
 
+.player-team-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.player-team-link:hover {
+  color: #374151;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .player-card-footer {
   display: flex;
   align-items: center;

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function PlayerCard({ player, onSelect }) {
   return (
     <article
@@ -31,7 +33,18 @@ function PlayerCard({ player, onSelect }) {
         <p>{player.position}</p>
 
         <div className="player-team">
-          <strong>{player.team}</strong>
+          {player.teamId ? (
+            <Link
+              to={`/teams/${player.teamId}`}
+              className="player-team-link"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {player.team}
+            </Link>
+          ) : (
+            <strong>{player.team}</strong>
+          )}
+
           <span>{player.nationality}</span>
         </div>
       </div>

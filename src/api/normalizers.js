@@ -70,6 +70,7 @@ export function normalizeStanding(team) {
 export function normalizePlayer(player) {
   return {
     id: player.idPlayer,
+    teamId: player.idTeam,
     name: player.strPlayer,
     shortName: player.strPlayer
       ? player.strPlayer
