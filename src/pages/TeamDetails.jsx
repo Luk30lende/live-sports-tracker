@@ -17,8 +17,14 @@ import {
   normalizePlayer,
 } from "../api/normalizers";
 
+import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
+
 function TeamDetails() {
   const { teamId } = useParams();
+
+  const { favouriteTeams, toggleFavourite } = useFavouriteTeamsContext();
+
+  const isFavourite = favouriteTeams.includes(Number(teamId));
 
   const [team, setTeam] = useState(null);
   const [upcomingGames, setUpcomingGames] = useState([]);
@@ -115,6 +121,18 @@ function TeamDetails() {
             {team.country ? ` • ${team.country}` : ""}
           </p>
         </div>
+
+        <button
+          type="button"
+          className={`favourite-button ${isFavourite ? "favourite" : ""}`}
+          onClick={() => toggleFavourite(Number(teamId))}
+          aria-pressed={isFavourite}
+          aria-label={
+            isFavourite ? `Unfollow ${team.name}` : `Follow ${team.name}`
+          }
+        >
+          {isFavourite ? "★ Following" : "☆ Follow"}
+        </button>
       </section>
 
       <section className="team-details-section">
