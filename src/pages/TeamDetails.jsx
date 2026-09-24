@@ -160,13 +160,13 @@ function TeamDetails() {
           <div className="games-grid">
             {upcomingGames.map((game) => (
               <div key={game.id}>
-                <div className="team-details-game">
+                <Link to={`/games/${game.id}`} className="team-details-game">
                   <strong>{game.homeTeam}</strong>
 
                   <span>{game.time || "TBA"}</span>
 
                   <strong>{game.awayTeam}</strong>
-                </div>
+                </Link>
               </div>
             ))}
           </div>
@@ -204,7 +204,11 @@ function TeamDetails() {
         {recentGames.length > 0 ? (
           <div className="games-grid">
             {recentGames.map((game) => (
-              <div className="team-details-game" key={game.id}>
+              <Link
+                to={`/games/${game.id}`}
+                className="team-details-game"
+                key={game.id}
+              >
                 <strong>{game.homeTeam}</strong>
 
                 <span>
@@ -212,7 +216,7 @@ function TeamDetails() {
                 </span>
 
                 <strong>{game.awayTeam}</strong>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

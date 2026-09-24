@@ -1093,6 +1093,12 @@ nav a:hover {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   text-align: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.team-details-game:hover {
+  border-color: #d1d5db;
 }
 
 .team-details-game strong {
