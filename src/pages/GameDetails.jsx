@@ -17,6 +17,19 @@ function GameDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const formatGameDate = (date) => {
+    if (!date) {
+      return "Date unavailable";
+    }
+
+    return new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   const loadGame = () => {
     setLoading(true);
     setError("");
@@ -114,7 +127,7 @@ function GameDetails() {
         </div>
 
         <div className="game-details-date">
-          <span>{game.date || "Date unavailable"}</span>
+          <span>{formatGameDate(game.date)}</span>
 
           <span>{game.time || "TBA"}</span>
         </div>
