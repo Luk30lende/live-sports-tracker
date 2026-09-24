@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function GameCard({ game, favouriteTeamIds = [] }) {
   const isHomeFavourite = favouriteTeamIds.includes(game.homeTeamId);
 
@@ -94,7 +96,9 @@ function GameCard({ game, favouriteTeamIds = [] }) {
             )}
           </div>
 
-          <span>{game.homeTeam}</span>
+          <Link to={`/teams/${game.homeTeamId}`} className="game-team-link">
+            {game.homeTeam}
+          </Link>
         </div>
 
         <div className="score">{getScoreContent()}</div>
@@ -110,7 +114,9 @@ function GameCard({ game, favouriteTeamIds = [] }) {
             </div>
           </div>
 
-          <span>{game.awayTeam}</span>
+          <Link to={`/teams/${game.awayTeamId}`} className="game-team-link">
+            {game.awayTeam}
+          </Link>
         </div>
       </div>
 
