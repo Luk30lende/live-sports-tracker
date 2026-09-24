@@ -449,6 +449,12 @@ nav a:hover {
   opacity: 0.7;
 }
 
+.game-card-footer > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .game-live-indicator {
   font-weight: 600;
 }
@@ -2172,6 +2178,20 @@ nav a:hover {
 
 .game-details-venue strong {
   font-size: 14px;
+}
+
+.game-details-link {
+  color: #374151;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.game-details-link:hover {
+  color: #111827;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* =========================

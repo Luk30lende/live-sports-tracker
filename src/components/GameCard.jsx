@@ -121,15 +121,21 @@ function GameCard({ game, favouriteTeamIds = [] }) {
       </div>
 
       <div className="game-card-footer">
-        {game.status === "LIVE" && (
-          <span className="game-live-indicator">● Match in progress</span>
-        )}
+        <div>
+          {game.status === "LIVE" && (
+            <span className="game-live-indicator">● Match in progress</span>
+          )}
 
-        {game.status === "FINISHED" && <span>Match completed</span>}
+          {game.status === "FINISHED" && <span>Match completed</span>}
 
-        {game.status === "UPCOMING" && <span>Kickoff scheduled</span>}
+          {game.status === "UPCOMING" && <span>Kickoff scheduled</span>}
 
-        {game.venue && <span className="game-venue">{game.venue}</span>}
+          {game.venue && <span className="game-venue">{game.venue}</span>}
+        </div>
+
+        <Link to={`/games/${game.id}`} className="game-details-link">
+          View game →
+        </Link>
       </div>
     </article>
   );
