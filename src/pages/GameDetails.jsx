@@ -7,8 +7,11 @@ import ErrorMessage from "../components/ErrorMessage";
 import { getEvent, getTeam } from "../api/sportsApi";
 import { normalizeGame, normalizeTeam } from "../api/normalizers";
 
+import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
+
 function GameDetails() {
   const { gameId } = useParams();
+  const { favouriteTeams } = useFavouriteTeamsContext();
 
   const [homeTeam, setHomeTeam] = useState(null);
   const [awayTeam, setAwayTeam] = useState(null);
@@ -16,6 +19,11 @@ function GameDetails() {
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const isHomeFavourite =
+    game && favouriteTeams.some((id) => String(id) === String(game.homeTeamId));
+  const isAwayFavourite =
+    game && favouriteTeams.some((id) => String(id) === String(game.awayTeamId));
 
   const formatGameDate = (date) => {
     if (!date) {
@@ -143,6 +151,10 @@ function GameDetails() {
             </div>
 
             <strong>{game.homeTeam}</strong>
+
+            {isHomeFavourite && (
+              <span className="game-details-favourite">★ Following</span>
+            )}
           </Link>
 
           <div className="game-details-score">
@@ -169,6 +181,10 @@ function GameDetails() {
             </div>
 
             <strong>{game.awayTeam}</strong>
+
+            {isAwayFavourite && (
+              <span className="game-details-favourite">★ Following</span>
+            )}
           </Link>
         </div>
 

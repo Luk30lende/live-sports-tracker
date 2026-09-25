@@ -2200,6 +2200,12 @@ nav a:hover {
   text-underline-offset: 3px;
 }
 
+.game-details-favourite {
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* =========================
    Focus States
 ========================= */
