@@ -78,8 +78,21 @@ function Scores() {
     });
   };
 
-  const loadGames = () => {
-    setLoading(true);
+  const isToday = (date) => {
+    const today = new Date();
+
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  };
+
+  const loadGames = (showLoading = true) => {
+    if (showLoading) {
+      setLoading(true);
+    }
+
     setError("");
 
     const date = formatDateForApi(selectedDate);
@@ -92,15 +105,32 @@ function Scores() {
       })
       .catch((error) => {
         setError(error.message);
-        setGames([]);
+
+        if (showLoading) {
+          setGames([]);
+        }
       })
       .finally(() => {
-        setLoading(false);
+        if (showLoading) {
+          setLoading(false);
+        }
       });
   };
 
   useEffect(() => {
     loadGames();
+
+    if (!isToday(selectedDate)) {
+      return;
+    }
+
+    const refreshInterval = setInterval(() => {
+      loadGames(false);
+    }, 60000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, [selectedDate]);
 
   const goToPreviousDay = () => {
