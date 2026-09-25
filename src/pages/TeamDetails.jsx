@@ -160,7 +160,10 @@ function TeamDetails() {
           <div className="games-grid">
             {upcomingGames.map((game) => (
               <div key={game.id}>
-                <Link to={`/games/${game.id}`} className="team-details-game">
+                <Link
+                  to={`/games/${game.id}?fromTeam=${team.id}`}
+                  className="team-details-game"
+                >
                   <strong>{game.homeTeam}</strong>
 
                   <span>{game.time || "TBA"}</span>

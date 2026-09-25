@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
@@ -11,6 +11,9 @@ import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function GameDetails() {
   const { gameId } = useParams();
+
+  const [searchParams] = useSearchParams();
+  const fromTeam = searchParams.get("fromTeam");
   const { favouriteTeams } = useFavouriteTeamsContext();
 
   const [homeTeam, setHomeTeam] = useState(null);
@@ -105,7 +108,10 @@ function GameDetails() {
 
   return (
     <main className="game-details-page">
-      <Link to="/scores" className="back-link">
+      <Link
+        to={fromTeam ? `/scores?team=${fromTeam}` : "/scores"}
+        className="back-link"
+      >
         ← Back to Scores
       </Link>
 
