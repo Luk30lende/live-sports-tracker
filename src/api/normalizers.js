@@ -117,3 +117,27 @@ export function normalizePlayerStats(stat) {
     leagueBadge: stat.strLeagueBadge || null,
   };
 }
+
+export function normalizeTimelineEvent(event) {
+  return {
+    id: event.idTimeline,
+
+    minute: event.intTime ? Number(event.intTime) : null,
+
+    type: event.strTimeline || "Event",
+
+    detail: event.strTimelineDetail || "Match event",
+
+    player: event.strPlayer || null,
+
+    team: event.strTeam || null,
+
+    teamId: event.idTeam || null,
+
+    assist: event.strAssist || null,
+
+    playerImage: event.strCutout || null,
+
+    period: event.strPeriod || null,
+  };
+}

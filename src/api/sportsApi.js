@@ -61,3 +61,7 @@ export function getPlayer(playerId) {
 export function getEvent(eventId) {
   return request(`lookupevent.php?id=${eventId}`);
 }
+
+export function getEventTimeline(eventId) {
+  return request(`lookuptimeline.php?id=${eventId}`);
+}

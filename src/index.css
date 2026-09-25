@@ -2207,6 +2207,70 @@ nav a:hover {
 }
 
 /* =========================
+   Game Timeline
+========================= */
+.game-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.game-timeline-event {
+  display: grid;
+  grid-template-columns: 50px 32px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.game-timeline-minute {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.game-timeline-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.game-timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.game-timeline-content strong {
+  font-size: 14px;
+}
+
+.game-timeline-content span {
+  font-size: 13px;
+}
+
+.game-timeline-content small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.game-details-timeline-section {
+  margin-top: 30px;
+}
+
+.game-details-section-header {
+  margin-bottom: 16px;
+}
+
+.game-details-section-header h2 {
+  font-size: 22px;
+}
+
+/* =========================
    Focus States
 ========================= */
 
@@ -2474,6 +2538,12 @@ a:focus-visible {
 
   .game-details-team:last-child {
     order: 3;
+  }
+
+  .game-timeline-event {
+    grid-template-columns: 40px 28px 1fr;
+    gap: 8px;
+    padding: 12px;
   }
 }
 

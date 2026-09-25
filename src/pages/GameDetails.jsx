@@ -4,8 +4,15 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 
-import { getEvent, getTeam } from "../api/sportsApi";
-import { normalizeGame, normalizeTeam } from "../api/normalizers";
+import { getEvent, getTeam, getEventTimeline } from "../api/sportsApi";
+
+import {
+  normalizeGame,
+  normalizeTeam,
+  normalizeTimelineEvent,
+} from "../api/normalizers";
+
+import GameTimeline from "../components/GameTimeline";
 
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
@@ -20,6 +27,7 @@ function GameDetails() {
   const [awayTeam, setAwayTeam] = useState(null);
 
   const [game, setGame] = useState(null);
+  const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -60,9 +68,10 @@ function GameDetails() {
         return Promise.all([
           getTeam(normalizedGame.homeTeamId),
           getTeam(normalizedGame.awayTeamId),
+          getEventTimeline(gameId),
         ]);
       })
-      .then(([homeTeamData, awayTeamData]) => {
+      .then(([homeTeamData, awayTeamData, timelineData]) => {
         const homeTeamResult = homeTeamData.teams?.[0];
 
         const awayTeamResult = awayTeamData.teams?.[0];
@@ -70,12 +79,15 @@ function GameDetails() {
         setHomeTeam(homeTeamResult ? normalizeTeam(homeTeamResult) : null);
 
         setAwayTeam(awayTeamResult ? normalizeTeam(awayTeamResult) : null);
+
+        setTimeline((timelineData.timeline || []).map(normalizeTimelineEvent));
       })
       .catch((error) => {
         setError(error.message);
         setGame(null);
         setHomeTeam(null);
         setAwayTeam(null);
+        setTimeline([]);
       })
       .finally(() => {
         setLoading(false);
@@ -200,6 +212,18 @@ function GameDetails() {
             <strong>{game.venue}</strong>
           </div>
         )}
+
+        <section className="game-details-timeline-section">
+          <div className="game-details-section-header">
+            <div>
+              <p className="eyebrow">MATCH EVENTS</p>
+
+              <h2>Timeline</h2>
+            </div>
+          </div>
+
+          <GameTimeline events={timeline} />
+        </section>
       </section>
     </main>
   );
