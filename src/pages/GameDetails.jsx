@@ -49,8 +49,11 @@ function GameDetails() {
     });
   };
 
-  const loadGame = () => {
-    setLoading(true);
+  const loadGame = (showLoading = true) => {
+    if (showLoading) {
+      setLoading(true);
+    }
+
     setError("");
 
     getEvent(gameId)
@@ -84,19 +87,38 @@ function GameDetails() {
       })
       .catch((error) => {
         setError(error.message);
-        setGame(null);
-        setHomeTeam(null);
-        setAwayTeam(null);
-        setTimeline([]);
+
+        if (showLoading) {
+          setGame(null);
+          setHomeTeam(null);
+          setAwayTeam(null);
+          setTimeline([]);
+        }
       })
       .finally(() => {
-        setLoading(false);
+        if (showLoading) {
+          setLoading(false);
+        }
       });
   };
 
   useEffect(() => {
     loadGame();
   }, [gameId]);
+
+  useEffect(() => {
+    if (!game || game.status !== "LIVE") {
+      return;
+    }
+
+    const refreshInterval = setInterval(() => {
+      loadGame(false);
+    }, 60000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
+  }, [game?.status, gameId]);
 
   if (loading) {
     return (

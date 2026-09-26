@@ -24,7 +24,10 @@ export function normalizeGame(event) {
 
     status: isFinished ? "FINISHED" : isLive ? "LIVE" : "UPCOMING",
 
-    minute: null,
+    minute:
+      event.intTime !== null && event.intTime !== undefined
+        ? Number(event.intTime)
+        : null,
 
     time: event.strTimeLocal || event.strTime || null,
 
