@@ -51,13 +51,15 @@ function MyTeams() {
       });
   };
 
-  const loadTeamGames = (teamList) => {
+  const loadTeamGames = (teamList, showLoading = true) => {
     if (teamList.length === 0) {
       setTeamGames({});
       return;
     }
 
-    setGamesLoading(true);
+    if (showLoading) {
+      setGamesLoading(true);
+    }
     setGamesError("");
 
     const requests = teamList.map((team) =>
@@ -95,7 +97,9 @@ function MyTeams() {
         setTeamGames({});
       })
       .finally(() => {
-        setGamesLoading(false);
+        if (showLoading) {
+          setGamesLoading(false);
+        }
       });
   };
 
@@ -113,7 +117,19 @@ function MyTeams() {
     );
 
     loadTeamGames(followedTeams);
-  }, [favouriteTeams]);
+
+    const refreshInterval = setInterval(() => {
+      const currentFollowedTeams = teams.filter((team) =>
+        favouriteTeams.includes(team.id),
+      );
+
+      loadTeamGames(currentFollowedTeams, false);
+    }, 60000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
+  }, [favouriteTeams, teams]);
 
   const myTeams = teams.filter((team) => favouriteTeams.includes(team.id));
 
