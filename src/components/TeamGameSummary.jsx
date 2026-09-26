@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 function TeamGameSummary({ team, upcomingGame, recentGame }) {
+  const [countdown, setCountdown] = useState(null);
   const formatDate = (date) => {
     if (!date) {
       return "Date unavailable";
@@ -11,6 +13,53 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
       month: "short",
     });
   };
+
+  useEffect(() => {
+    if (!upcomingGame?.date || !upcomingGame?.time) {
+      setCountdown(null);
+      return;
+    }
+
+    const getCountdown = () => {
+      const kickoffTime = new Date(`${upcomingGame.date}T${upcomingGame.time}`);
+
+      const difference = kickoffTime.getTime() - Date.now();
+
+      if (difference <= 0) {
+        return "Starting now";
+      }
+
+      const totalSeconds = Math.floor(difference / 1000);
+
+      const days = Math.floor(totalSeconds / 86400);
+
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+      const seconds = totalSeconds % 60;
+
+      if (days > 0) {
+        return `${days}d ${hours}h ${minutes}m`;
+      }
+
+      if (hours > 0) {
+        return `${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      return `${minutes}m ${seconds}s`;
+    };
+
+    setCountdown(getCountdown());
+
+    const countdownInterval = setInterval(() => {
+      setCountdown(getCountdown());
+    }, 1000);
+
+    return () => {
+      clearInterval(countdownInterval);
+    };
+  }, [upcomingGame]);
 
   return (
     <div className="team-game-summary">
@@ -38,6 +87,12 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
                 {" • "}
                 {upcomingGame.time || "TBA"}
               </span>
+
+              {countdown && (
+                <span className="team-game-summary-countdown">
+                  Starts in {countdown}
+                </span>
+              )}
 
               <strong>{upcomingGame.awayTeam}</strong>
             </div>
