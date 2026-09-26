@@ -58,6 +58,10 @@ export function getPlayer(playerId) {
   return request(`lookupplayer.php?id=${playerId}`);
 }
 
+export function searchPlayer(playerName) {
+  return request(`searchplayers.php?p=${encodeURIComponent(playerName)}`);
+}
+
 export function getEvent(eventId) {
   return request(`lookupevent.php?id=${eventId}`);
 }

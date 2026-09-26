@@ -11,6 +11,7 @@ import {
   getTeamPlayers,
   getPlayer,
   getPlayerStats,
+  searchPlayer,
 } from "../api/sportsApi";
 
 import {
@@ -25,6 +26,12 @@ function Players() {
   const [teams, setTeams] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [players, setPlayers] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [loadingTeams, setLoadingTeams] = useState(true);
   const [loadingPlayers, setLoadingPlayers] = useState(false);
@@ -87,6 +94,35 @@ function Players() {
       })
       .finally(() => {
         setLoadingPlayers(false);
+      });
+  };
+
+  const handlePlayerSearch = () => {
+    const query = searchTerm.trim();
+
+    if (!query) {
+      setSearchResults([]);
+      setSearchError("");
+      setHasSearched(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    setSearchError("");
+    setHasSearched(true);
+
+    searchPlayer(query)
+      .then((data) => {
+        const apiPlayers = (data.player || []).map(normalizePlayer);
+
+        setSearchResults(apiPlayers);
+      })
+      .catch((error) => {
+        setSearchError(error.message);
+        setSearchResults([]);
+      })
+      .finally(() => {
+        setSearchLoading(false);
       });
   };
 
@@ -220,6 +256,95 @@ function Players() {
               <ErrorMessage message={teamsError} onRetry={loadTeams} />
             )}
           </section>
+
+          <section className="player-search">
+            <div className="player-selector-header">
+              <div>
+                <p className="eyebrow">SEARCH</p>
+
+                <h2>Find a Player</h2>
+
+                <p>Search for a player by name.</p>
+              </div>
+            </div>
+
+            <div className="player-search-controls">
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handlePlayerSearch();
+                  }
+                }}
+                placeholder="Search for a player..."
+                aria-label="Search for a player"
+              />
+
+              <button
+                type="button"
+                onClick={handlePlayerSearch}
+                disabled={searchLoading}
+              >
+                {searchLoading ? "Searching..." : "Search"}
+              </button>
+            </div>
+          </section>
+
+          {hasSearched && (
+            <section className="players-list">
+              <div className="players-list-header">
+                <div>
+                  <h2>Search Results</h2>
+
+                  <p>Players matching your search</p>
+                </div>
+
+                {!searchLoading && !searchError && (
+                  <span>
+                    {searchResults.length}{" "}
+                    {searchResults.length === 1 ? "player" : "players"}
+                  </span>
+                )}
+              </div>
+
+              {searchError && (
+                <ErrorMessage
+                  message={searchError}
+                  onRetry={handlePlayerSearch}
+                />
+              )}
+
+              {searchLoading && (
+                <LoadingMessage message="Searching players..." />
+              )}
+
+              {!searchLoading && !searchError && searchResults.length > 0 && (
+                <div className="players-grid">
+                  {searchResults.map((player) => (
+                    <PlayerCard
+                      key={player.id}
+                      player={player}
+                      onSelect={handlePlayerSelect}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {!searchLoading && !searchError && searchResults.length === 0 && (
+                <div className="status-message players-empty-state">
+                  <div className="empty-state-icon" aria-hidden="true">
+                    —
+                  </div>
+
+                  <h3>No players found</h3>
+
+                  <p>No players matched "{searchTerm.trim()}".</p>
+                </div>
+              )}
+            </section>
+          )}
 
           {playersError && (
             <ErrorMessage
