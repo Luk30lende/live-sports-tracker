@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function TeamGameSummary({ team, upcomingGame, recentGame }) {
+function TeamGameSummary({ team, liveGame, upcomingGame, recentGame }) {
   const [countdown, setCountdown] = useState(null);
+
   const formatDate = (date) => {
     if (!date) {
       return "Date unavailable";
@@ -25,18 +26,18 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
 
       const difference = kickoffTime.getTime() - Date.now();
 
+      if (Number.isNaN(kickoffTime.getTime())) {
+        return null;
+      }
+
       if (difference <= 0) {
         return "Starting now";
       }
 
       const totalSeconds = Math.floor(difference / 1000);
-
       const days = Math.floor(totalSeconds / 86400);
-
       const hours = Math.floor((totalSeconds % 86400) / 3600);
-
       const minutes = Math.floor((totalSeconds % 3600) / 60);
-
       const seconds = totalSeconds % 60;
 
       if (days > 0) {
@@ -76,10 +77,34 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
 
       <div className="team-game-summary-content">
         <div className="team-game-summary-item">
-          <span className="team-game-summary-label">NEXT GAME</span>
+          <span className="team-game-summary-label">
+            {liveGame ? "LIVE GAME" : "NEXT GAME"}
+          </span>
 
-          {upcomingGame ? (
-            <div>
+          {liveGame ? (
+            <Link
+              to={`/games/${liveGame.id}?fromTeam=${team.id}`}
+              className="team-game-summary-game-link"
+            >
+              <strong>{liveGame.homeTeam}</strong>
+
+              <span className="team-game-summary-score">
+                {liveGame.homeScore ?? "-"}
+                {" - "}
+                {liveGame.awayScore ?? "-"}
+              </span>
+
+              <strong>{liveGame.awayTeam}</strong>
+
+              <span className="team-game-summary-live-status">
+                Match in progress · View game →
+              </span>
+            </Link>
+          ) : upcomingGame ? (
+            <Link
+              to={`/games/${upcomingGame.id}?fromTeam=${team.id}`}
+              className="team-game-summary-game-link"
+            >
               <strong>{upcomingGame.homeTeam}</strong>
 
               <span className="team-game-summary-vs">
@@ -95,7 +120,7 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
               )}
 
               <strong>{upcomingGame.awayTeam}</strong>
-            </div>
+            </Link>
           ) : (
             <p>No upcoming game available.</p>
           )}
@@ -105,7 +130,10 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
           <span className="team-game-summary-label">LAST RESULT</span>
 
           {recentGame ? (
-            <div>
+            <Link
+              to={`/games/${recentGame.id}?fromTeam=${team.id}`}
+              className="team-game-summary-game-link"
+            >
               <strong>{recentGame.homeTeam}</strong>
 
               <span className="team-game-summary-score">
@@ -119,7 +147,7 @@ function TeamGameSummary({ team, upcomingGame, recentGame }) {
               <span className="team-game-summary-date">
                 {formatDate(recentGame.date)}
               </span>
-            </div>
+            </Link>
           ) : (
             <p>No recent result available.</p>
           )}

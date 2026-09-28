@@ -8,7 +8,10 @@ import {
   getLeagueTeams,
   getTeamNextEvents,
   getTeamPreviousEvents,
+  getEventsByDay,
 } from "../api/sportsApi";
+
+import { leagueIds } from "../api/leagueIds";
 
 import { normalizeTeam, normalizeGame } from "../api/normalizers";
 
@@ -25,6 +28,13 @@ function MyTeams() {
   const [gamesError, setGamesError] = useState("");
   const [loading, setLoading] = useState(true);
   const [teamsError, setTeamsError] = useState("");
+  const formatDateForApi = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
 
   const loadTeams = () => {
     setLoading(true);
@@ -54,37 +64,59 @@ function MyTeams() {
   const loadTeamGames = (teamList, showLoading = true) => {
     if (teamList.length === 0) {
       setTeamGames({});
+      setGamesError("");
+      setGamesLoading(false);
       return;
     }
 
     if (showLoading) {
       setGamesLoading(true);
     }
+
     setGamesError("");
 
-    const requests = teamList.map((team) =>
+    const teamRequests = teamList.map((team) =>
       Promise.all([
         getTeamNextEvents(team.id),
         getTeamPreviousEvents(team.id),
       ]).then(([nextData, previousData]) => {
         const upcomingGames = (nextData.events || []).map(normalizeGame);
-
         const recentGames = (previousData.results || []).map(normalizeGame);
 
         return {
           teamId: team.id,
-          upcomingGame: upcomingGames[0] || null,
-          recentGame: recentGames[0] || null,
+          upcomingGame:
+            upcomingGames.find((game) => game.status === "UPCOMING") || null,
+          recentGame:
+            recentGames.find((game) => game.status === "FINISHED") || null,
         };
       }),
     );
 
-    Promise.all(requests)
-      .then((results) => {
+    const today = formatDateForApi(new Date());
+
+    Promise.all([
+      Promise.all(teamRequests),
+      getEventsByDay(today, leagueIds.premierLeague).catch(() => ({
+        events: [],
+      })),
+    ])
+      .then(([teamResults, todayData]) => {
+        const liveGames = (todayData.events || [])
+          .map(normalizeGame)
+          .filter((game) => game.status === "LIVE");
+
         const gamesByTeam = {};
 
-        results.forEach((result) => {
+        teamResults.forEach((result) => {
+          const liveGame = liveGames.find(
+            (game) =>
+              String(game.homeTeamId) === String(result.teamId) ||
+              String(game.awayTeamId) === String(result.teamId),
+          );
+
           gamesByTeam[result.teamId] = {
+            liveGame: liveGame || null,
             upcomingGame: result.upcomingGame,
             recentGame: result.recentGame,
           };
@@ -94,7 +126,10 @@ function MyTeams() {
       })
       .catch((error) => {
         setGamesError(error.message);
-        setTeamGames({});
+
+        if (showLoading) {
+          setTeamGames({});
+        }
       })
       .finally(() => {
         if (showLoading) {
@@ -268,6 +303,7 @@ function MyTeams() {
                   <TeamGameSummary
                     key={team.id}
                     team={team}
+                    liveGame={teamGames[team.id]?.liveGame || null}
                     upcomingGame={teamGames[team.id]?.upcomingGame || null}
                     recentGame={teamGames[team.id]?.recentGame || null}
                   />
