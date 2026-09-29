@@ -20,8 +20,12 @@ import {
   normalizePlayerStats,
 } from "../api/normalizers";
 
+import { leagueIds, leagues } from "../api/leagueIds";
+
 function Players() {
   const { playerId } = useParams();
+
+  const [selectedLeague, setSelectedLeague] = useState(leagueIds.premierLeague);
 
   const [teams, setTeams] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState("");
@@ -47,26 +51,39 @@ function Players() {
   const [playersError, setPlayersError] = useState("");
 
   const loadTeams = () => {
+    const currentLeague = leagues.find(
+      (league) => league.id === selectedLeague,
+    );
+
+    if (!currentLeague) {
+      return;
+    }
+
     setLoadingTeams(true);
     setTeamsError("");
+    setTeams([]);
+    setPlayers([]);
+    setSelectedTeamId("");
 
-    getLeagueTeams("English Premier League")
+    getLeagueTeams(currentLeague.apiName)
       .then((data) => {
         const apiTeams = (data.teams || []).map(normalizeTeam);
 
         setTeams(apiTeams);
 
-        if (!playerId) {
-          const arsenal = apiTeams.find((team) => team.name === "Arsenal");
+        if (!playerId && apiTeams.length > 0) {
+          const defaultTeam =
+            selectedLeague === leagueIds.premierLeague
+              ? apiTeams.find((team) => team.name === "Arsenal") || apiTeams[0]
+              : apiTeams[0];
 
-          if (arsenal) {
-            setSelectedTeamId(arsenal.id);
-          }
+          setSelectedTeamId(defaultTeam.id);
         }
       })
       .catch((error) => {
         setTeamsError(error.message);
         setTeams([]);
+        setSelectedTeamId("");
       })
       .finally(() => {
         setLoadingTeams(false);
@@ -175,7 +192,7 @@ function Players() {
 
   useEffect(() => {
     loadTeams();
-  }, []);
+  }, [selectedLeague]);
 
   useEffect(() => {
     loadPlayers(selectedTeamId);
@@ -207,7 +224,8 @@ function Players() {
               <h1>Players</h1>
 
               <p>
-                Explore players and squad information from the Premier League.
+                Explore players, squads and statistics across multiple football
+                leagues.
               </p>
             </div>
 
@@ -224,14 +242,30 @@ function Players() {
                 <h2>Select a Team</h2>
 
                 <p>
-                  Choose a Premier League team to explore its current squad.
+                  Choose a competition and team to explore its current squad.
                 </p>
               </div>
             </div>
 
-            {loadingTeams ? (
-              <LoadingMessage message="Loading teams..." />
-            ) : (
+            <div className="player-select-wrapper">
+              <label htmlFor="players-league">Competition</label>
+
+              <select
+                id="players-league"
+                value={selectedLeague}
+                onChange={(event) =>
+                  setSelectedLeague(Number(event.target.value))
+                }
+              >
+                {leagues.map((league) => (
+                  <option key={league.id} value={league.id}>
+                    {league.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {!loadingTeams && (
               <div className="player-select-wrapper">
                 <label htmlFor="team">Team</label>
 
@@ -239,7 +273,7 @@ function Players() {
                   id="team"
                   value={selectedTeamId}
                   onChange={(event) => setSelectedTeamId(event.target.value)}
-                  disabled={teamsError}
+                  disabled={!!teamsError || teams.length === 0}
                 >
                   <option value="">Select a team</option>
 
