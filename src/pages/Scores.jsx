@@ -15,13 +15,20 @@ function Scores() {
   const [searchParams] = useSearchParams();
 
   const teamId = searchParams.get("team");
+  const leagueParam = searchParams.get("league");
 
   const { favouriteTeams } = useFavouriteTeamsContext();
 
   const [filter, setFilter] = useState("ALL");
   const [selectedDate, setSelectedDate] = useState(() => new Date());
 
-  const [selectedLeague, setSelectedLeague] = useState(leagueIds.premierLeague);
+  const [selectedLeague, setSelectedLeague] = useState(() => {
+    const leagueId = Number(leagueParam);
+
+    return leagues.some((league) => league.id === leagueId)
+      ? leagueId
+      : leagueIds.premierLeague;
+  });
 
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -134,6 +141,14 @@ function Scores() {
       clearInterval(refreshInterval);
     };
   }, [selectedDate, selectedLeague]);
+
+  useEffect(() => {
+    const leagueId = Number(leagueParam);
+
+    if (leagues.some((league) => league.id === leagueId)) {
+      setSelectedLeague(leagueId);
+    }
+  }, [leagueParam]);
 
   const goToPreviousDay = () => {
     setSelectedDate((currentDate) => {

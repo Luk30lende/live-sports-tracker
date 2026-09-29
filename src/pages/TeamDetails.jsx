@@ -17,6 +17,8 @@ import {
   normalizePlayer,
 } from "../api/normalizers";
 
+import { leagues } from "../api/leagueIds";
+
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function TeamDetails() {
@@ -34,6 +36,10 @@ function TeamDetails() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const teamLeague = leagues.find(
+    (league) => league.apiName === team?.league || league.name === team?.league,
+  );
 
   const loadTeamDetails = () => {
     setLoading(true);
@@ -149,7 +155,7 @@ function TeamDetails() {
           </span>
 
           <Link
-            to={`/scores?team=${team.id}`}
+            to={`/scores?team=${team.id}&league=${teamLeague?.id || ""}`}
             className="team-details-view-link"
           >
             View all games →
@@ -197,7 +203,7 @@ function TeamDetails() {
           </span>
 
           <Link
-            to={`/scores?team=${team.id}`}
+            to={`/scores?team=${team.id}&league=${teamLeague?.id || ""}`}
             className="team-details-view-link"
           >
             View all games →
