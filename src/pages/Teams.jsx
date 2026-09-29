@@ -5,8 +5,10 @@ import { normalizeTeam } from "../api/normalizers";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
+import { leagueIds, leagues } from "../api/leagueIds";
 
 function Teams() {
+  const [selectedLeague, setSelectedLeague] = useState(leagueIds.premierLeague);
   const [sportFilter, setSportFilter] = useState("ALL");
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,11 +22,17 @@ function Teams() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const currentLeague = leagues.find((league) => league.id === selectedLeague);
+
   const loadTeams = () => {
+    if (!currentLeague) {
+      return;
+    }
+
     setLoading(true);
     setError("");
 
-    getLeagueTeams("English Premier League")
+    getLeagueTeams(currentLeague.apiName)
       .then((data) => {
         const apiTeams = (data.teams || []).map(normalizeTeam);
 
@@ -68,7 +76,7 @@ function Teams() {
 
   useEffect(() => {
     loadTeams();
-  }, []);
+  }, [selectedLeague]);
 
   const filteredTeams =
     sportFilter === "ALL"
@@ -115,6 +123,20 @@ function Teams() {
             {searchLoading ? "Searching..." : "Search"}
           </button>
         </div>
+
+        <label>
+          Competition{" "}
+          <select
+            value={selectedLeague}
+            onChange={(event) => setSelectedLeague(Number(event.target.value))}
+          >
+            {leagues.map((league) => (
+              <option key={league.id} value={league.id}>
+                {league.name}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <button
           className={sportFilter === "ALL" ? "active" : ""}
@@ -178,7 +200,7 @@ function Teams() {
         {!searchTerm.trim() && (
           <>
             <div className="teams-list-header">
-              <h2>Teams</h2>
+              <h2>{currentLeague?.name || "Teams"}</h2>
 
               <span>{filteredTeams.length} teams</span>
             </div>

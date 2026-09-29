@@ -7,9 +7,29 @@ export const leagueIds = {
 };
 
 export const leagues = [
-  { id: leagueIds.premierLeague, name: "Premier League" },
-  { id: leagueIds.laLiga, name: "La Liga" },
-  { id: leagueIds.bundesliga, name: "Bundesliga" },
-  { id: leagueIds.serieA, name: "Serie A" },
-  { id: leagueIds.ligue1, name: "Ligue 1" },
+  {
+    id: leagueIds.premierLeague,
+    name: "Premier League",
+    apiName: "English Premier League",
+  },
+  {
+    id: leagueIds.laLiga,
+    name: "La Liga",
+    apiName: "Spanish La Liga",
+  },
+  {
+    id: leagueIds.bundesliga,
+    name: "Bundesliga",
+    apiName: "German Bundesliga",
+  },
+  {
+    id: leagueIds.serieA,
+    name: "Serie A",
+    apiName: "Italian Serie A",
+  },
+  {
+    id: leagueIds.ligue1,
+    name: "Ligue 1",
+    apiName: "French Ligue 1",
+  },
 ];
