@@ -247,44 +247,46 @@ function Players() {
               </div>
             </div>
 
-            <div className="player-select-wrapper">
-              <label htmlFor="players-league">Competition</label>
-
-              <select
-                id="players-league"
-                value={selectedLeague}
-                onChange={(event) =>
-                  setSelectedLeague(Number(event.target.value))
-                }
-              >
-                {leagues.map((league) => (
-                  <option key={league.id} value={league.id}>
-                    {league.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {!loadingTeams && (
+            <div className="player-selectors">
               <div className="player-select-wrapper">
-                <label htmlFor="team">Team</label>
+                <label htmlFor="players-league">Competition</label>
 
                 <select
-                  id="team"
-                  value={selectedTeamId}
-                  onChange={(event) => setSelectedTeamId(event.target.value)}
-                  disabled={!!teamsError || teams.length === 0}
+                  id="players-league"
+                  value={selectedLeague}
+                  onChange={(event) =>
+                    setSelectedLeague(Number(event.target.value))
+                  }
                 >
-                  <option value="">Select a team</option>
-
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.id}>
-                      {team.name}
+                  {leagues.map((league) => (
+                    <option key={league.id} value={league.id}>
+                      {league.name}
                     </option>
                   ))}
                 </select>
               </div>
-            )}
+
+              {!loadingTeams && (
+                <div className="player-select-wrapper">
+                  <label htmlFor="team">Team</label>
+
+                  <select
+                    id="team"
+                    value={selectedTeamId}
+                    onChange={(event) => setSelectedTeamId(event.target.value)}
+                    disabled={!!teamsError || teams.length === 0}
+                  >
+                    <option value="">Select a team</option>
+
+                    {teams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
 
             {teamsError && (
               <ErrorMessage message={teamsError} onRetry={loadTeams} />
