@@ -6,9 +6,9 @@ import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 
 import { getEventsByDay } from "../api/sportsApi";
-
-import { leagueIds } from "../api/leagueIds";
+import { leagueIds, leagues } from "../api/leagueIds";
 import { normalizeGame } from "../api/normalizers";
+
 import { useFavouriteTeamsContext } from "../context/FavouriteTeamsContext";
 
 function Scores() {
@@ -20,6 +20,8 @@ function Scores() {
 
   const [filter, setFilter] = useState("ALL");
   const [selectedDate, setSelectedDate] = useState(() => new Date());
+
+  const [selectedLeague, setSelectedLeague] = useState(leagueIds.premierLeague);
 
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,7 +99,7 @@ function Scores() {
 
     const date = formatDateForApi(selectedDate);
 
-    getEventsByDay(date, leagueIds.premierLeague)
+    getEventsByDay(date, selectedLeague)
       .then((data) => {
         const apiGames = (data.events || []).map(normalizeGame);
 
@@ -131,7 +133,7 @@ function Scores() {
     return () => {
       clearInterval(refreshInterval);
     };
-  }, [selectedDate]);
+  }, [selectedDate, selectedLeague]);
 
   const goToPreviousDay = () => {
     setSelectedDate((currentDate) => {
@@ -233,7 +235,21 @@ function Scores() {
         </div>
       </section>
 
-      {/* Date Navigation */}
+      <section className="scores-league-selector">
+        <label htmlFor="scores-league">Competition</label>
+
+        <select
+          id="scores-league"
+          value={selectedLeague}
+          onChange={(event) => setSelectedLeague(Number(event.target.value))}
+        >
+          {leagues.map((league) => (
+            <option key={league.id} value={league.id}>
+              {league.name}
+            </option>
+          ))}
+        </select>
+      </section>
 
       <div className="score-date-navigation">
         <button
@@ -315,7 +331,11 @@ function Scores() {
       <section className="scores-list">
         <div className="scores-list-header">
           <div>
-            <h2>{getTitle()}</h2>
+            <h2>
+              {leagues.find((league) => league.id === selectedLeague)?.name}
+              {" — "}
+              {getTitle()}
+            </h2>
 
             <p className="scores-filter-description">
               {getFilterDescription()}
