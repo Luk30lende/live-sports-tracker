@@ -144,13 +144,6 @@ function Teams() {
         >
           All
         </button>
-
-        <button
-          className={sportFilter === "Football" ? "active" : ""}
-          onClick={() => setSportFilter("Football")}
-        >
-          Football
-        </button>
       </div>
 
       {loading && <LoadingMessage message="Loading teams..." />}

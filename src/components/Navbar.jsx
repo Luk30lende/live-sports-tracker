@@ -39,7 +39,7 @@ function Navbar() {
   return (
     <nav className="navbar" aria-label="Main navigation">
       <Link to="/" className="logo" onClick={closeMenu}>
-        Sports Tracker
+        Football Games Tracker
       </Link>
 
       <button

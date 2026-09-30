@@ -95,7 +95,7 @@ function Home() {
     <main className="dashboard">
       <section className="welcome">
         <div>
-          <p className="eyebrow">SPORTS TRACKER</p>
+          <p className="eyebrow">FOOTBALL GAMES TRACKER</p>
 
           <h1>
             Stay on top of
