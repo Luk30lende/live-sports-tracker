@@ -6,11 +6,7 @@ The application uses **React** and **TheSportsDB API** to retrieve sports data a
 
 ## Demo
 
-🌐 **Live Demo:** [Add your Netlify/Vercel URL here]
-
-📂 **GitHub Repository:** [Add your GitHub repository URL here]
-
----
+🌐 **Live Demo:** (https://live-football-games-tracker.netlify.app/)
 
 ## Screenshots
 
